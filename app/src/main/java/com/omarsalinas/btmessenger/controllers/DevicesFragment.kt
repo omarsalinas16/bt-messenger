@@ -13,6 +13,7 @@ import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.BtHelper
 import com.omarsalinas.btmessenger.common.SimpleFragment
@@ -40,7 +41,11 @@ class DevicesFragment : SimpleFragment() {
 
     private val btHelper: BtHelper = BtHelper()
     private val receiver: BtReceiver = BtReceiver()
-    private val adapter: DevicesAdapter = DevicesAdapter(this.activity)
+
+    private val adapter: DevicesAdapter = DevicesAdapter(this.activity) {
+        onDeviceSelected(it)
+    }
+
     private var scanning: Boolean = false
     private var receiverRegistered: Boolean = false
 
@@ -74,9 +79,19 @@ class DevicesFragment : SimpleFragment() {
         this.scanButton.setOnClickListener { onScanButtonClicked() }
     }
 
+    override fun onStart() {
+        super.onStart()
+        setScanning(false)
+    }
+
     override fun onStop() {
         super.onStop()
         setScanning(false)
+    }
+
+    private fun onDeviceSelected(device: BluetoothDevice) {
+        setScanning(false)
+        Toast.makeText(this.activity, "Device ${device.address} selected", Toast.LENGTH_SHORT).show()
     }
 
     private fun onScanButtonClicked() {

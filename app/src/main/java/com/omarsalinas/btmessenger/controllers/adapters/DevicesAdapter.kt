@@ -10,7 +10,10 @@ import android.widget.TextView
 import com.omarsalinas.btmessenger.R
 import kotlinx.android.synthetic.main.item_device.view.*
 
-class DevicesAdapter(private val activity: Activity?) : RecyclerView.Adapter<DevicesAdapter.DevicesHolder>() {
+class DevicesAdapter(
+        private val activity: Activity?,
+        val onDeviceSelected: (device: BluetoothDevice) -> Unit
+) : RecyclerView.Adapter<DevicesAdapter.DevicesHolder>() {
 
     private var list: ArrayList<BluetoothDevice> = arrayListOf()
 
@@ -41,19 +44,27 @@ class DevicesAdapter(private val activity: Activity?) : RecyclerView.Adapter<Dev
         notifyDataSetChanged()
     }
 
-    inner class DevicesHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class DevicesHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+
+        private lateinit var device: BluetoothDevice
 
         private val nameText: TextView = view.item_device_name_txt
         private val addressText: TextView = view.item_device_address_txt
 
         fun bind(device: BluetoothDevice) {
-            this.nameText.text = if (!device.name.isNullOrEmpty() && device.name.isNotBlank()){
-                device.name
+            this.device = device
+
+            this.nameText.text = if (!this.device.name.isNullOrEmpty() && this.device.name.isNotBlank()){
+                this.device.name
             } else {
                 activity?.getString(R.string.unknown) ?: "No name"
             }
 
-            this.addressText.text = device.address
+            this.addressText.text = this.device.address
+
+            this.view.setOnClickListener {
+                onDeviceSelected(this.device)
+            }
         }
 
     }

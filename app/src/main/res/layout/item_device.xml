@@ -9,7 +9,10 @@
     android:paddingStart="@dimen/margin_18dp"
     android:paddingLeft="@dimen/margin_18dp"
     android:orientation="vertical"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/item_device_name_txt"
