@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">BtMessenger</string>
+
+    <!-- Common strings -->
+    <string name="welcome">Welcome</string>
+    <string name="enter">Enter</string>
+
+    <!-- Error strings -->
+    <string name="error_no_bluetooth">No Bluetooth</string>
+    <string name="error_no_bluetooth_message">Your device does not support Bluetooth, cant\'t continue</string>
+    <string name="error_missing_permissions">Permission failed</string>
+    <string name="error_missing_permissions_message">Necessary permission not given, can\'t continue</string>
+    <string name="fragment_login_username_et_hint">Your username</string>
+    <string name="fragment_login_save_username">Save username</string>
+    <string name="fragment_login_save_username_message">Set %s as your preferred username?</string>
+</resources>
