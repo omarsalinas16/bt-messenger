@@ -13,7 +13,7 @@ class SaveUserNameDialog : SimpleDialog() {
         private const val TAG: String = "SAVE_USERNAME_DIALOG"
         private const val BUNDLE_USERNAME = "com.omarsalinas.btmessenger.bundle_username"
 
-        fun newInstance(userName: String, onPositive: (dialog: DialogInterface?) -> Unit, onCancel: () -> Unit) : SaveUserNameDialog {
+        fun newInstance(userName: String, onPositive: (dialog: DialogInterface?) -> Unit, onCancel: () -> Unit): SaveUserNameDialog {
             val bundle = Bundle()
             bundle.putString(BUNDLE_USERNAME, userName)
 
@@ -27,7 +27,7 @@ class SaveUserNameDialog : SimpleDialog() {
         }
     }
 
-    var onPositive : (dialog: DialogInterface?) -> Unit = {  }
+    var onPositive: (dialog: DialogInterface?) -> Unit = { }
     var onCancel: () -> Unit = { }
 
     override fun setup(dialog: AlertDialog.Builder) {

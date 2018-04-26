@@ -20,7 +20,7 @@ class BtHelper {
     val scanning: Boolean get() = adapter.isDiscovering
 
     fun cancelScan() {
-        adapter.cancelDiscovery()
+        if (this.scanning) adapter.cancelDiscovery()
     }
 
     fun startScan() {

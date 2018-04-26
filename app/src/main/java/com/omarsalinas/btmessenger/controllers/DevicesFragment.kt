@@ -113,7 +113,7 @@ class DevicesFragment : SimpleFragment() {
 
             this.btHelper.startScan()
         } else {
-            if (this.receiverRegistered){
+            if (this.receiverRegistered) {
                 this.activity?.unregisterReceiver(this.receiver)
                 this.receiverRegistered = false
             }
@@ -126,8 +126,11 @@ class DevicesFragment : SimpleFragment() {
     }
 
     private fun setScanButtonText(scanning: Boolean) {
-        try { TransitionManager.beginDelayedTransition(this.fragment_devices_container) }
-        catch (e: Exception) { Log.e(TAG, "Ignored transition, error: $e") }
+        try {
+            TransitionManager.beginDelayedTransition(this.fragment_devices_container)
+        } catch (e: Exception) {
+            Log.e(TAG, "Ignored transition, error: $e")
+        }
 
         this.scanButton.text = if (scanning) {
             this.activity?.getString(R.string.fragment_devices_scan_btn_start)
@@ -137,8 +140,11 @@ class DevicesFragment : SimpleFragment() {
     }
 
     private fun setSpinnerVisible(visible: Boolean) {
-        try { TransitionManager.beginDelayedTransition(this.fragment_devices_container) }
-        catch (e: Exception) { Log.e(TAG, "Ignored transition, error: $e") }
+        try {
+            TransitionManager.beginDelayedTransition(this.fragment_devices_container)
+        } catch (e: Exception) {
+            Log.e(TAG, "Ignored transition, error: $e")
+        }
 
         this.spinner.visibility = if (visible) View.VISIBLE else View.GONE
     }

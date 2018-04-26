@@ -54,7 +54,7 @@ class DevicesAdapter(
         fun bind(device: BluetoothDevice) {
             this.device = device
 
-            this.nameText.text = if (!this.device.name.isNullOrEmpty() && this.device.name.isNotBlank()){
+            this.nameText.text = if (!this.device.name.isNullOrEmpty() && this.device.name.isNotBlank()) {
                 this.device.name
             } else {
                 activity?.getString(R.string.unknown) ?: "No name"

@@ -12,6 +12,11 @@ abstract class SimpleDialog : DialogFragment() {
         private const val TAG: String = "SIMPLE_DIALOG"
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.retainInstance = true
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = AlertDialog.Builder(this.context!!)
         setup(dialog)
