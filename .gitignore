@@ -40,6 +40,11 @@ captures/
 .idea/dictionaries
 .idea/libraries
 
+.idea/caches/build_file_checksum.ser
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+
 # Keystore files
 *.jks
 
