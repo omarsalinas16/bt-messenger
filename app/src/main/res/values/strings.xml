@@ -4,13 +4,20 @@
     <!-- Common strings -->
     <string name="welcome">Welcome</string>
     <string name="enter">Enter</string>
+    <string name="unknown">Unknown</string>
 
     <!-- Error strings -->
-    <string name="error_no_bluetooth">No Bluetooth</string>
+    <string name="error_no_bluetooth">Not compatible</string>
     <string name="error_no_bluetooth_message">Your device does not support Bluetooth, cant\'t continue</string>
     <string name="error_missing_permissions">Permission failed</string>
     <string name="error_missing_permissions_message">Necessary permission not given, can\'t continue</string>
+
+    <!-- fragment_login -->
     <string name="fragment_login_username_et_hint">Your username</string>
     <string name="fragment_login_save_username">Save username</string>
     <string name="fragment_login_save_username_message">Set %s as your preferred username?</string>
+
+    <!-- fragment_devices -->
+    <string name="fragment_devices_scan_btn_start">Scan devices</string>
+    <string name="fragment_devices_scan_btn_stop">Stop scanning</string>
 </resources>

@@ -17,5 +17,13 @@ class BtHelper {
 
     val enabled: Boolean get() = adapter.isEnabled
     val address: String get() = adapter.address
+    val scanning: Boolean get() = adapter.isDiscovering
 
+    fun cancelScan() {
+        adapter.cancelDiscovery()
+    }
+
+    fun startScan() {
+        adapter.startDiscovery()
+    }
 }
