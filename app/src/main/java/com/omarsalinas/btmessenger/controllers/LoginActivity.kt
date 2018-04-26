@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.FragmentActivity
+import com.omarsalinas.btmessenger.dialogs.PermissionErrorDialog
 
 class LoginActivity : FragmentActivity() {
 
@@ -48,21 +49,14 @@ class LoginActivity : FragmentActivity() {
     }
 
     /**
-     * Returns an [AlertDialog] displaying an error message when the permission were not accepted,
+     * Returns a [PermissionErrorDialog] displaying an error message when the permission were not accepted,
      * the positive button closes the app.
-     * @return The newly created [AlertDialog]
+     * @return The newly created [PermissionErrorDialog]
      */
-    private fun getPermissionErrorDialog(): AlertDialog.Builder {
-        return AlertDialog.Builder(this)
-                .setTitle(R.string.error_missing_permissions)
-                .setMessage(R.string.error_missing_permissions_message)
-                .setPositiveButton(android.R.string.ok) { dialog: DialogInterface?, _: Int ->
-                    run {
-                        dialog?.dismiss()
-                        finishAndRemoveTask()
-                    }
-                }
-                .setCancelable(false)
+    private fun getPermissionErrorDialog(): PermissionErrorDialog {
+        return PermissionErrorDialog.newInstance {
+            finishAndRemoveTask()
+        }
     }
 
     /**
@@ -77,7 +71,7 @@ class LoginActivity : FragmentActivity() {
                 Log.d("REE", "permissions")
                 permissions.forEach {
                     if (grantResults[permissions.indexOf(it)] != PackageManager.PERMISSION_GRANTED) {
-                        getPermissionErrorDialog().show()
+                        getPermissionErrorDialog().show(this.supportFragmentManager)
                         return
                     }
                 }
