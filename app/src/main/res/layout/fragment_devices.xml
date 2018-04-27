@@ -26,7 +26,8 @@
             style="@style/AppTheme.Widget.ButtonRounded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_devices_scan_btn_start" />
+            android:text="@string/fragment_devices_scan_btn_start"
+            android:drawableLeft="@drawable/ic_bluetooth_white"/>
 
         <ProgressBar
             android:id="@+id/fragment_devices_spinner"

@@ -3,6 +3,8 @@ package com.omarsalinas.btmessenger.controllers
 import android.content.DialogInterface
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v7.widget.AppCompatButton
+import android.support.v7.widget.AppCompatEditText
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -27,8 +29,8 @@ class LoginFragment : SimpleFragment() {
 
     private var savedUserName: String = ""
 
-    private lateinit var userNameEditText: EditText
-    private lateinit var enterButton: Button
+    private lateinit var userNameEditText: AppCompatEditText
+    private lateinit var enterButton: AppCompatButton
 
     override fun getLayoutId(): Int = R.layout.fragment_login
 
@@ -105,6 +107,7 @@ class LoginFragment : SimpleFragment() {
     }
 
     private inner class UsernameEditTextWatcher : TextWatcher {
+
         override fun afterTextChanged(s: Editable?) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

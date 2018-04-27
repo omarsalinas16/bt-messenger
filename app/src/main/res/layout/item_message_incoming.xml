@@ -10,7 +10,7 @@
     android:gravity="start"
     android:orientation="vertical">
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/item_message_timestamp_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         android:paddingStart="@dimen/margin_10dp"
         android:paddingTop="@dimen/margin_5dp">
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_message_name_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:textStyle="bold"
             tools:text="Username" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_message_content_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -2,6 +2,8 @@ package com.omarsalinas.btmessenger.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.NonNull
+import org.jetbrains.annotations.NotNull
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,12 +12,21 @@ import java.util.*
  * @param content The string message
  * @param timestamp The moment in time the message was created
  */
-data class Message(val content: String, val author: User) : Parcelable {
+data class Message(val content: String, @NonNull @NotNull val author: User) : Parcelable, Comparable<Message> {
 
     val timestamp: Date = Date()
 
-    val formattedDate: String get() {
-        return SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.US).format(this.timestamp)
+    val formattedDate: String
+        get() {
+            return SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.US).format(this.timestamp)
+        }
+
+    override fun compareTo(other: Message): Int {
+        if (this.content == other.content && this.author == other.author && this.timestamp == other.timestamp) {
+            return 0
+        }
+
+        return 1
     }
 
     constructor(source: Parcel) : this(

@@ -14,7 +14,7 @@
     android:paddingStart="@dimen/margin_18dp"
     android:paddingTop="@dimen/margin_5dp">
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/item_device_name_txt"
         style="@android:style/TextAppearance.DeviceDefault.Medium"
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
         android:textStyle="bold"
         tools:text="Device name" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/item_device_address_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

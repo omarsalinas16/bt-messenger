@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.support.annotation.NonNull
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,6 +23,7 @@ import com.omarsalinas.btmessenger.controllers.adapters.DevicesAdapter
 import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.fragment_devices.*
 import kotlinx.android.synthetic.main.fragment_devices.view.*
+import org.jetbrains.annotations.NotNull
 
 class DevicesFragment : SimpleFragment() {
 
@@ -29,7 +31,7 @@ class DevicesFragment : SimpleFragment() {
         private const val TAG: String = "DEVICES_FRAGMENT"
         private const val BUNDLE_USER = "com.omarsalinas.btmessenger.bundle_user"
 
-        fun newInstance(user: User): DevicesFragment {
+        fun newInstance(@NonNull @NotNull user: User): DevicesFragment {
             val bundle = Bundle()
             bundle.putParcelable(BUNDLE_USER, user)
 
@@ -124,10 +126,10 @@ class DevicesFragment : SimpleFragment() {
         }
 
         setSpinnerVisible(this.scanning)
-        setScanButtonText(!this.scanning)
+        setScanButtonState(this.scanning)
     }
 
-    private fun setScanButtonText(scanning: Boolean) {
+    private fun setScanButtonState(scanning: Boolean) {
         try {
             TransitionManager.beginDelayedTransition(this.fragment_devices_container)
         } catch (e: Exception) {
@@ -135,10 +137,16 @@ class DevicesFragment : SimpleFragment() {
         }
 
         this.scanButton.text = if (scanning) {
-            this.activity?.getString(R.string.fragment_devices_scan_btn_start)
-        } else {
             this.activity?.getString(R.string.fragment_devices_scan_btn_stop)
+        } else {
+            this.activity?.getString(R.string.fragment_devices_scan_btn_start)
         }
+
+        this.scanButton.setCompoundDrawablesWithIntrinsicBounds(
+                if (scanning) R.drawable.ic_bluetooth_searching_white
+                else R.drawable.ic_bluetooth_white,
+                0, 0, 0
+        )
     }
 
     private fun setSpinnerVisible(visible: Boolean) {

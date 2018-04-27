@@ -8,7 +8,15 @@ import android.os.Parcelable
  * @param userName The username that identifies the user
  * @param btAddress The Bluetooth device address string
  */
-data class User(val userName: String, val btAddress: String) : Parcelable {
+data class User(val userName: String, val btAddress: String) : Parcelable, Comparable<User> {
+
+    override fun compareTo(other: User): Int {
+        if (this.userName == other.userName && this.btAddress == other.btAddress) {
+            return 0
+        }
+
+        return 1
+    }
 
     constructor(source: Parcel) : this(
             source.readString(),

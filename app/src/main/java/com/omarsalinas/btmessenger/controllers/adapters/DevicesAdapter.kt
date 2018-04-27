@@ -9,51 +9,35 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
+import com.omarsalinas.btmessenger.common.SimpleAdapter
+import com.omarsalinas.btmessenger.common.SimpleHolder
 import kotlinx.android.synthetic.main.item_device.view.*
 
 class DevicesAdapter(
         private val activity: Activity?,
-        val onDeviceSelected: (device: BluetoothDevice) -> Unit
-) : RecyclerView.Adapter<DevicesAdapter.DevicesHolder>() {
-
-    private var list: ArrayList<BluetoothDevice> = arrayListOf()
-
-    override fun getItemCount(): Int = this.list.size
+        private val onDeviceSelected: (device: BluetoothDevice) -> Unit
+) : SimpleAdapter<BluetoothDevice, DevicesAdapter.DevicesHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DevicesHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_device, parent, false)
         return DevicesHolder(view)
     }
 
-    override fun onBindViewHolder(holder: DevicesHolder, position: Int) {
-        holder.bind(this.list[position])
-    }
-
-    fun add(device: BluetoothDevice): Boolean {
-        return if (!this.list.contains(device)) {
-            this.list.add(device)
-            notifyItemInserted(this.list.size - 1)
-
-            true
-        } else {
-            false
-        }
-    }
-
-    fun clear() {
-        this.list.clear()
-        notifyDataSetChanged()
-    }
-
-    inner class DevicesHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    inner class DevicesHolder(view: View) : SimpleHolder<BluetoothDevice>(view) {
 
         private lateinit var device: BluetoothDevice
 
         private val nameText: TextView = view.item_device_name_txt
         private val addressText: TextView = view.item_device_address_txt
 
-        fun bind(device: BluetoothDevice) {
-            this.device = device
+        init {
+            view.setOnClickListener {
+                onDeviceSelected(this.device)
+            }
+        }
+
+        override fun bind(item: BluetoothDevice) {
+            this.device = item
 
             this.nameText.text = if (AppUtils.stringNotEmpty(this.device.name)) {
                 this.device.name
@@ -62,10 +46,6 @@ class DevicesAdapter(
             }
 
             this.addressText.text = this.device.address
-
-            this.view.setOnClickListener {
-                onDeviceSelected(this.device)
-            }
         }
 
     }
