@@ -20,7 +20,7 @@
         <item name="android:editTextStyle">@style/AppTheme.Widget.EditText</item>
     </style>
 
-    <style name="AppTheme.Widget"/>
+    <style name="AppTheme.Widget" />
 
     <style name="AppTheme.Widget.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/background_rounded</item>

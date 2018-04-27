@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,23 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:listitem="@layout/item_device"/>
+        tools:listitem="@layout/item_device" />
 
     <LinearLayout
         android:id="@+id/fragment_devices_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_10dp"
-        android:paddingBottom="@dimen/margin_10dp"
         android:layout_gravity="bottom"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_10dp"
+        android:paddingTop="@dimen/margin_10dp">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/fragment_devices_scan_btn"
-            android:text="@string/fragment_devices_scan_btn_start"
+            style="@style/AppTheme.Widget.ButtonRounded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AppTheme.Widget.ButtonRounded"/>
+            android:text="@string/fragment_devices_scan_btn_start" />
 
         <ProgressBar
             android:id="@+id/fragment_devices_spinner"
@@ -35,7 +34,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="@dimen/margin_10dp"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.omarsalinas.btmessenger.controllers
 
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -42,9 +43,7 @@ class DevicesFragment : SimpleFragment() {
     private val btHelper: BtHelper = BtHelper()
     private val receiver: BtReceiver = BtReceiver()
 
-    private val adapter: DevicesAdapter = DevicesAdapter(this.activity) {
-        onDeviceSelected(it)
-    }
+    private lateinit var adapter: DevicesAdapter
 
     private var scanning: Boolean = false
     private var receiverRegistered: Boolean = false
@@ -64,6 +63,11 @@ class DevicesFragment : SimpleFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        this.adapter = DevicesAdapter(this.activity) {
+            onDeviceSelected(it)
+        }
+
         setViewsById(view)
     }
 
@@ -102,12 +106,10 @@ class DevicesFragment : SimpleFragment() {
         this.scanning = scanning
 
         if (this.scanning) {
-            val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-
             this.adapter.clear()
 
             if (!this.receiverRegistered) {
-                this.activity?.registerReceiver(this.receiver, filter)
+                this.activity?.registerReceiver(this.receiver, getReceiverIntentFilter())
                 this.receiverRegistered = true
             }
 
@@ -149,6 +151,14 @@ class DevicesFragment : SimpleFragment() {
         this.spinner.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    private fun getReceiverIntentFilter(): IntentFilter {
+        val filter = IntentFilter()
+        filter.addAction(BluetoothDevice.ACTION_FOUND)
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+
+        return filter
+    }
+
     private inner class BtReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -156,6 +166,9 @@ class DevicesFragment : SimpleFragment() {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                     adapter.add(device)
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    setScanning(false)
                 }
             }
         }

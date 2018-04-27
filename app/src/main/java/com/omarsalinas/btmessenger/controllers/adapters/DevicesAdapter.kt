@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.omarsalinas.btmessenger.R
+import com.omarsalinas.btmessenger.common.AppUtils
 import kotlinx.android.synthetic.main.item_device.view.*
 
 class DevicesAdapter(
@@ -54,7 +55,7 @@ class DevicesAdapter(
         fun bind(device: BluetoothDevice) {
             this.device = device
 
-            this.nameText.text = if (!this.device.name.isNullOrEmpty() && this.device.name.isNotBlank()) {
+            this.nameText.text = if (AppUtils.stringNotEmpty(this.device.name)) {
                 this.device.name
             } else {
                 activity?.getString(R.string.unknown) ?: "No name"

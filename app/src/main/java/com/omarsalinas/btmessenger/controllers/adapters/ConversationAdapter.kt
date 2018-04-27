@@ -38,10 +38,12 @@ class ConversationAdapter(
 
         private val nameText: TextView = this.view.item_message_name_txt
         private val contentText: TextView = this.view.item_message_content_txt
+        private val timestampText: TextView = this.view.item_message_timestamp_txt
 
         fun bind(message: Message) {
             this.nameText.text = message.author.userName
             this.contentText.text = message.content
+            this.timestampText.text = message.formattedDate
         }
 
     }

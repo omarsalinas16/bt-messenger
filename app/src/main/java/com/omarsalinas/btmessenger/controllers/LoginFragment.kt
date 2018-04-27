@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.BtHelper
+import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.SimpleFragment
 import com.omarsalinas.btmessenger.dialogs.SaveUserNameDialog
 import com.omarsalinas.btmessenger.models.User
@@ -41,7 +42,9 @@ class LoginFragment : SimpleFragment() {
         this.userNameEditText.addTextChangedListener(UsernameEditTextWatcher())
         this.userNameEditText.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                doLogin()
+                if (AppUtils.stringNotEmpty(this.userNameEditText.text)) {
+                    doLogin()
+                }
             }
 
             false
@@ -51,10 +54,7 @@ class LoginFragment : SimpleFragment() {
         this.enterButton.setOnClickListener { doLogin() }
 
         this.savedUserName = loadSavedUsername()
-
-        if (this.savedUserName.isNotBlank() && this.savedUserName.isNotEmpty()) {
-            this.userNameEditText.setText(this.savedUserName)
-        }
+        this.userNameEditText.setText(this.savedUserName)
     }
 
     override fun onResume() {
@@ -63,7 +63,7 @@ class LoginFragment : SimpleFragment() {
     }
 
     private fun doLogin() {
-        val userName = getUserName()
+        val userName = AppUtils.getEditTextValue(this.userNameEditText)
         val btHelper = BtHelper()
         val user = User(userName, btHelper.address)
 
@@ -77,15 +77,6 @@ class LoginFragment : SimpleFragment() {
     private fun openDevicesActivity(user: User) {
         val intent = DevicesActivity.newIntent(this.context, user)
         startActivity(intent)
-    }
-
-    private fun getUserName(): String {
-        return this.userNameEditText.text.toString()
-    }
-
-    private fun setButtonActive(active: Boolean) {
-        this.enterButton.isClickable = active
-        this.enterButton.alpha = if (active) 1.0f else 0.45f
     }
 
     private fun loadSavedUsername(): String {
@@ -118,7 +109,7 @@ class LoginFragment : SimpleFragment() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            setButtonActive(s.isNotBlank() && s.isNotEmpty())
+            AppUtils.setButtonActive(enterButton, AppUtils.stringNotEmpty(s))
         }
 
     }

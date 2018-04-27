@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_16dp"
-    android:paddingTop="@dimen/margin_5dp"
-    android:paddingBottom="@dimen/margin_5dp"
-    android:paddingStart="@dimen/margin_10dp"
-    android:paddingEnd="@dimen/margin_10dp"
-    android:background="@drawable/background_rounded"
-    android:backgroundTint="@color/colorMedium"
     android:layout_gravity="start"
+    android:layout_marginBottom="@dimen/margin_16dp"
+    android:layout_marginEnd="@dimen/margin_18dp"
+    android:layout_marginStart="@dimen/margin_18dp"
     android:gravity="start"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/item_message_timestamp_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        tools:text="Username"
-        android:textStyle="bold"/>
+        android:layout_marginBottom="@dimen/margin_5dp"
+        android:layout_marginStart="@dimen/margin_10dp"
+        android:textSize="@dimen/small_text"
+        tools:text="09 Jan 2018, 00:00" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="280dp"
+        android:background="@drawable/background_rounded"
+        android:backgroundTint="@color/colorMedium"
         android:gravity="start"
-        tools:text="This is a sample message. This is a sample message. This is a sample message. This is a sample message."/>
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_5dp"
+        android:paddingEnd="@dimen/margin_10dp"
+        android:paddingStart="@dimen/margin_10dp"
+        android:paddingTop="@dimen/margin_5dp">
+
+        <TextView
+            android:id="@+id/item_message_name_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textStyle="bold"
+            tools:text="Username" />
+
+        <TextView
+            android:id="@+id/item_message_content_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:maxWidth="280dp"
+            tools:text="This is a sample message. This is a sample message. This is a sample message. This is a sample message." />
+
+    </LinearLayout>
 
 </LinearLayout>

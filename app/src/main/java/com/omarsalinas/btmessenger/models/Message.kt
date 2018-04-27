@@ -2,7 +2,7 @@ package com.omarsalinas.btmessenger.models
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.time.LocalDateTime
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -13,6 +13,10 @@ import java.util.*
 data class Message(val content: String, val author: User) : Parcelable {
 
     val timestamp: Date = Date()
+
+    val formattedDate: String get() {
+        return SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.US).format(this.timestamp)
+    }
 
     constructor(source: Parcel) : this(
             source.readString(),
