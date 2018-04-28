@@ -22,7 +22,7 @@ abstract class FragmentActivity : SimpleActivity() {
         }
     }
 
-    protected fun setFragmentToContainer(@IdRes id: Int, getFragment: () -> Fragment) {
+    private fun setFragmentToContainer(@IdRes id: Int, getFragment: () -> Fragment) {
         val fm = supportFragmentManager
         var fragment = fm.findFragmentById(id)
 

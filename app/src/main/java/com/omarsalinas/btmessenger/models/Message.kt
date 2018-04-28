@@ -10,11 +10,11 @@ import java.util.*
 /**
  * Describes a message sent from user to user
  * @param content The string message
- * @param timestamp The moment in time the message was created
+ * @param author The creator of the message
  */
 data class Message(val content: String, @NonNull @NotNull val author: User) : Parcelable, Comparable<Message> {
 
-    val timestamp: Date = Date()
+    private val timestamp: Date = Date()
 
     val formattedDate: String
         get() {

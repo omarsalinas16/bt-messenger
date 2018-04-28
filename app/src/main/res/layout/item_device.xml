@@ -10,7 +10,7 @@
     android:minHeight="?android:listPreferredItemHeight"
     android:orientation="vertical"
     android:paddingBottom="@dimen/margin_5dp"
-    android:paddingLeft="@dimen/margin_18dp"
+    android:paddingEnd="@dimen/margin_18dp"
     android:paddingStart="@dimen/margin_18dp"
     android:paddingTop="@dimen/margin_5dp">
 

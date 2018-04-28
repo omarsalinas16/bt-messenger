@@ -26,14 +26,14 @@
             style="@style/AppTheme.Widget.ButtonRounded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_devices_scan_btn_start"
-            android:drawableLeft="@drawable/ic_bluetooth_white"/>
+            android:drawableStart="@drawable/ic_bluetooth_white"
+            android:text="@string/fragment_devices_scan_btn_start" />
 
         <ProgressBar
             android:id="@+id/fragment_devices_spinner"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginLeft="@dimen/margin_10dp"
+            android:layout_marginStart="@dimen/margin_10dp"
             android:visibility="gone"
             tools:visibility="visible" />
 

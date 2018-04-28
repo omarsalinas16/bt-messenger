@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.annotation.NonNull
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -16,31 +15,21 @@ import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.BtHelper
 import com.omarsalinas.btmessenger.common.SimpleFragment
 import com.omarsalinas.btmessenger.controllers.adapters.DevicesAdapter
-import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.fragment_devices.*
 import kotlinx.android.synthetic.main.fragment_devices.view.*
-import org.jetbrains.annotations.NotNull
 
 class DevicesFragment : SimpleFragment() {
 
     companion object {
         private const val TAG: String = "DEVICES_FRAGMENT"
-        private const val BUNDLE_USER = "com.omarsalinas.btmessenger.bundle_user"
 
-        fun newInstance(@NonNull @NotNull user: User): DevicesFragment {
-            val bundle = Bundle()
-            bundle.putParcelable(BUNDLE_USER, user)
-
-            val fragment = DevicesFragment()
-            fragment.arguments = bundle
-
-            return fragment
+        fun newInstance(): DevicesFragment {
+            return DevicesFragment()
         }
     }
 

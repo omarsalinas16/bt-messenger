@@ -6,7 +6,6 @@ import android.content.Intent
 import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
 import android.widget.FrameLayout
-import android.widget.Toast
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.FragmentActivity
 import com.omarsalinas.btmessenger.models.User
@@ -29,8 +28,7 @@ class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
     override fun getLayoutId(): Int = R.layout.activity_main
 
     override fun createFragment(): Fragment {
-        val user = intent.getParcelableExtra<User>(EXTRA_USER)
-        return DevicesFragment.newInstance(user)
+        return DevicesFragment.newInstance()
     }
 
     override fun onDeviceSelected(device: BluetoothDevice) {
