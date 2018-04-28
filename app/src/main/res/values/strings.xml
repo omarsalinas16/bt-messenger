@@ -12,7 +12,7 @@
     <string name="error_missing_permissions">Permission failed</string>
     <string name="error_missing_permissions_message">Necessary permission not given, can\'t continue</string>
 
-    <!-- fragment_login -->
+    <!-- activity_login -->
     <string name="fragment_login_username_et_hint">Your username</string>
     <string name="fragment_login_save_username">Save username</string>
     <string name="fragment_login_save_username_message">Set %s as your preferred username?</string>

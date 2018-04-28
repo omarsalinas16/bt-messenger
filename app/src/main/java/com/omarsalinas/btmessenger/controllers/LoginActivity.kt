@@ -1,22 +1,33 @@
 package com.omarsalinas.btmessenger.controllers
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.util.Log
+import android.support.v7.widget.AppCompatButton
+import android.support.v7.widget.AppCompatEditText
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import com.omarsalinas.btmessenger.R
-import com.omarsalinas.btmessenger.common.FragmentActivity
+import com.omarsalinas.btmessenger.common.AppUtils
+import com.omarsalinas.btmessenger.common.BtHelper
+import com.omarsalinas.btmessenger.common.SimpleActivity
 import com.omarsalinas.btmessenger.dialogs.ErrorDialog
+import com.omarsalinas.btmessenger.dialogs.SaveUserNameDialog
+import com.omarsalinas.btmessenger.models.User
+import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : FragmentActivity() {
+class LoginActivity : SimpleActivity() {
 
     companion object {
         private const val TAG: String = "LOGIN_ACTIVITY"
         private const val REQUEST_CODE_ASK_PERMISSIONS: Int = 0x0001
+        private const val PREFS_USERNAME = "com.omarsalinas.btmessenger.prefs_username"
 
         @JvmStatic
         private val REQUIRED_SDK_PERMISSIONS: Array<String> = arrayOf(
@@ -27,7 +38,12 @@ class LoginActivity : FragmentActivity() {
         )
     }
 
-    override fun createFragment(): Fragment = LoginFragment()
+    private var savedUserName: String = ""
+
+    private lateinit var userNameEditText: AppCompatEditText
+    private lateinit var enterButton: AppCompatButton
+
+    override fun getLayoutId(): Int = R.layout.activity_login
 
     /**
      * Requests the necessary permissions defined in [REQUIRED_SDK_PERMISSIONS]
@@ -44,6 +60,104 @@ class LoginActivity : FragmentActivity() {
                 ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), REQUEST_CODE_ASK_PERMISSIONS)
             }
         }
+
+        setViewsById()
+    }
+
+    /**
+     * Load view widgets and set listeners
+     */
+    private fun setViewsById() {
+        this.userNameEditText = this.activity_login_username_et
+
+        this.userNameEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                AppUtils.setButtonActive(enterButton, AppUtils.stringNotEmpty(s))
+            }
+        })
+
+        this.userNameEditText.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (AppUtils.stringNotEmpty(this.userNameEditText.text)) {
+                    doLogin()
+                }
+            }
+
+            false
+        }
+
+        this.enterButton = this.activity_login_enter_btn
+        this.enterButton.setOnClickListener { doLogin() }
+
+        this.savedUserName = loadSavedUsername()
+        this.userNameEditText.setText(this.savedUserName)
+    }
+
+    /**
+     * Retrieve the saved username each time the activity is resumed to keep a real copy of the
+     * actually saved data and not just the in-memory variable
+     */
+    override fun onResume() {
+        super.onResume()
+        this.savedUserName = loadSavedUsername()
+    }
+
+    /**
+     * Initialize the login process, if the input username is different than the saved one at prefs
+     * then ask if the user wants to set it as its default. If the device has no Bluetooth or the
+     * adapter failed to set then display an error message.
+     */
+    private fun doLogin() {
+        try {
+            val btHelper = BtHelper()
+
+            val userName = AppUtils.getEditTextValue(this.userNameEditText)
+            val user = User(userName, btHelper.address)
+            // val user = User(userName, "00:00:00:00:00:00")
+
+            if (userName != this.savedUserName) {
+                getSaveUserNameDialog(user).show(this.supportFragmentManager)
+            } else {
+                openMainActivity(user)
+            }
+        } catch (e: NullPointerException) {
+            AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
+        }
+    }
+
+    private fun openMainActivity(user: User) {
+        val intent = MainActivity.newIntent(this, user)
+        startActivity(intent)
+    }
+
+    private fun loadSavedUsername(): String {
+        val preferenceManager = PreferenceManager.getDefaultSharedPreferences(this)
+        return preferenceManager.getString(PREFS_USERNAME, "") ?: ""
+    }
+
+    private fun saveUsernameToPrefs(userName: String) {
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putString(PREFS_USERNAME, userName)
+                .apply()
+    }
+
+    /**
+     * Returns a [SaveUserNameDialog] displaying the option to set the newly introduced username as
+     * the default. Opens [MainActivity] regardless
+     * @return The newly created [SaveUserNameDialog]
+     */
+    private fun getSaveUserNameDialog(user: User): SaveUserNameDialog {
+        return SaveUserNameDialog.newInstance(
+                user.userName,
+                { _: DialogInterface? ->
+                    saveUsernameToPrefs(user.userName)
+                    openMainActivity(user)
+                },
+                { openMainActivity(user) }
+        )
     }
 
     /**
@@ -69,7 +183,6 @@ class LoginActivity : FragmentActivity() {
 
         when (requestCode) {
             REQUEST_CODE_ASK_PERMISSIONS -> {
-                Log.d("REE", "permissions")
                 permissions.forEach {
                     if (grantResults[permissions.indexOf(it)] != PackageManager.PERMISSION_GRANTED) {
                         getPermissionErrorDialog().show(this.supportFragmentManager)

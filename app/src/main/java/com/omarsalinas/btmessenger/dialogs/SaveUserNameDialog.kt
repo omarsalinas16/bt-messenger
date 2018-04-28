@@ -3,7 +3,6 @@ package com.omarsalinas.btmessenger.dialogs
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.SimpleDialog
 
@@ -51,7 +50,6 @@ class SaveUserNameDialog : SimpleDialog() {
     }
 
     override fun onCancel(dialog: DialogInterface?) {
-        Log.d(TAG, "cancel internal")
         onCancel()
     }
 
