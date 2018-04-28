@@ -1,5 +1,6 @@
 package com.omarsalinas.btmessenger.controllers
 
+import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
@@ -17,6 +18,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.omarsalinas.btmessenger.R
+import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.BtHelper
 import com.omarsalinas.btmessenger.common.SimpleFragment
 import com.omarsalinas.btmessenger.controllers.adapters.DevicesAdapter
@@ -44,7 +46,7 @@ class DevicesFragment : SimpleFragment() {
 
     private val btHelper: BtHelper = BtHelper()
     private val receiver: BtReceiver = BtReceiver()
-
+    private var callbacks: Callbacks? = null
     private lateinit var adapter: DevicesAdapter
 
     private var scanning: Boolean = false
@@ -55,6 +57,11 @@ class DevicesFragment : SimpleFragment() {
     private lateinit var spinner: ProgressBar
 
     override fun getLayoutId(): Int = R.layout.fragment_devices
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        this.callbacks = context as Callbacks
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,9 +102,24 @@ class DevicesFragment : SimpleFragment() {
         setScanning(false)
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        this.callbacks = null
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            BtHelper.REQUEST_ENABLE_BLUETOOTH -> {
+                if (resultCode != RESULT_OK) {
+                    AppUtils.getNoBluetoothErrorDialog(this.activity!!).show(this.fragmentManager)
+                }
+            }
+        }
+    }
+
     private fun onDeviceSelected(device: BluetoothDevice) {
         setScanning(false)
-        Toast.makeText(this.activity, "Device ${device.address} selected", Toast.LENGTH_SHORT).show()
+        this.callbacks?.onDeviceSelected(device)
     }
 
     private fun onScanButtonClicked() {
@@ -165,6 +187,10 @@ class DevicesFragment : SimpleFragment() {
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
 
         return filter
+    }
+
+    internal interface Callbacks {
+        fun onDeviceSelected(device: BluetoothDevice)
     }
 
     private inner class BtReceiver : BroadcastReceiver() {

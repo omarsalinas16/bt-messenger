@@ -1,18 +1,16 @@
 package com.omarsalinas.btmessenger.controllers
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.FragmentActivity
-import com.omarsalinas.btmessenger.dialogs.PermissionErrorDialog
+import com.omarsalinas.btmessenger.dialogs.ErrorDialog
 
 class LoginActivity : FragmentActivity() {
 
@@ -49,12 +47,15 @@ class LoginActivity : FragmentActivity() {
     }
 
     /**
-     * Returns a [PermissionErrorDialog] displaying an error message when the permission were not accepted,
+     * Returns a [ErrorDialog] displaying an error message when the permission were not accepted,
      * the positive button closes the app.
-     * @return The newly created [PermissionErrorDialog]
+     * @return The newly created [ErrorDialog]
      */
-    private fun getPermissionErrorDialog(): PermissionErrorDialog {
-        return PermissionErrorDialog.newInstance {
+    private fun getPermissionErrorDialog(): ErrorDialog {
+        val title = getString(R.string.error_missing_permissions)
+        val message = getString(R.string.error_missing_permissions_message)
+
+        return ErrorDialog.newInstance(title, message) {
             finishAndRemoveTask()
         }
     }

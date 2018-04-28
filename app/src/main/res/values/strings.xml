@@ -8,7 +8,7 @@
 
     <!-- Error strings -->
     <string name="error_no_bluetooth">Not compatible</string>
-    <string name="error_no_bluetooth_message">Your device does not support Bluetooth, cant\'t continue</string>
+    <string name="error_no_bluetooth_message">Your device does not support Bluetooth, can\'t continue</string>
     <string name="error_missing_permissions">Permission failed</string>
     <string name="error_missing_permissions_message">Necessary permission not given, can\'t continue</string>
 

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:divider="?android:attr/dividerHorizontal"
+    android:showDividers="middle"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
@@ -11,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:listitem="@layout/item_message"/>
+        tools:listitem="@layout/item_message" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,13 +24,16 @@
             android:id="@+id/fragment_conversation_message_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:ellipsize="none"
+            android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/fragment_conversation_send_btn"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_send"/>
+            app:srcCompat="@drawable/ic_send" />
 
     </LinearLayout>
 

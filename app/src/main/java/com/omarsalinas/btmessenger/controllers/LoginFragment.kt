@@ -10,12 +10,11 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.BtHelper
 import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.SimpleFragment
+import com.omarsalinas.btmessenger.dialogs.ErrorDialog
 import com.omarsalinas.btmessenger.dialogs.SaveUserNameDialog
 import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.fragment_login.view.*
@@ -65,19 +64,25 @@ class LoginFragment : SimpleFragment() {
     }
 
     private fun doLogin() {
-        val userName = AppUtils.getEditTextValue(this.userNameEditText)
-        val btHelper = BtHelper()
-        val user = User(userName, btHelper.address)
+        try {
+            // val btHelper = BtHelper()
 
-        if (userName != this.savedUserName) {
-            getSaveUserNameDialog(user).show(this.fragmentManager!!)
-        } else {
-            openDevicesActivity(user)
+            val userName = AppUtils.getEditTextValue(this.userNameEditText)
+            // val user = User(userName, btHelper.address)
+            val user = User(userName, "00:00:00:00:00:00")
+
+            if (userName != this.savedUserName) {
+                getSaveUserNameDialog(user).show(this.fragmentManager)
+            } else {
+                openDevicesActivity(user)
+            }
+        } catch (e: NullPointerException) {
+            AppUtils.getNoBluetoothErrorDialog(this.activity!!).show(this.fragmentManager)
         }
     }
 
     private fun openDevicesActivity(user: User) {
-        val intent = DevicesActivity.newIntent(this.context, user)
+        val intent = MainActivity.newIntent(this.context, user)
         startActivity(intent)
     }
 

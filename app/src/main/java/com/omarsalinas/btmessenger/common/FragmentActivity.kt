@@ -1,6 +1,7 @@
 package com.omarsalinas.btmessenger.common
 
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import com.omarsalinas.btmessenger.R
 
@@ -16,12 +17,18 @@ abstract class FragmentActivity : SimpleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setFragmentToContainer(R.id.fragment_container) {
+            createFragment()
+        }
+    }
+
+    protected fun setFragmentToContainer(@IdRes id: Int, getFragment: () -> Fragment) {
         val fm = supportFragmentManager
-        var fragment = fm.findFragmentById(R.id.fragment_container)
+        var fragment = fm.findFragmentById(id)
 
         if (fragment == null) {
-            fragment = createFragment()
-            fm.beginTransaction().add(R.id.fragment_container, fragment).commit()
+            fragment = getFragment()
+            fm.beginTransaction().add(id, fragment).commit()
         }
     }
 
