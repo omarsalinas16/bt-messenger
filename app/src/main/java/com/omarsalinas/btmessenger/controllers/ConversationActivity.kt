@@ -16,7 +16,7 @@ class ConversationActivity : FragmentActivity() {
         private const val EXTRA_PAL: String = "com.omarsalinas.btmessenger.extra_pal"
 
         fun newIntent(context: Context?, @NonNull @NotNull user: User, @NonNull @NotNull pal: User): Intent {
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, ConversationActivity::class.java)
             intent.putExtra(EXTRA_USER, user)
             intent.putExtra(EXTRA_PAL, pal)
 

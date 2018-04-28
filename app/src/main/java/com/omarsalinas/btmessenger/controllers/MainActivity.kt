@@ -1,14 +1,15 @@
 package com.omarsalinas.btmessenger.controllers
 
-import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.widget.FrameLayout
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.FragmentActivity
 import com.omarsalinas.btmessenger.models.User
+import kotlinx.android.synthetic.main.activity_double.*
 import org.jetbrains.annotations.NotNull
 
 class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
@@ -25,26 +26,26 @@ class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
         }
     }
 
-    override fun getLayoutId(): Int = R.layout.activity_main
+    override fun getLayoutId(): Int = R.layout.activity_double
 
     override fun createFragment(): Fragment {
         return DevicesFragment.newInstance()
     }
 
-    override fun onDeviceSelected(device: BluetoothDevice) {
+    override fun onDeviceSelected(pal: User) {
         val user = intent.getParcelableExtra<User>(EXTRA_USER)
-        val pal = User(device.name ?: "Buddy", device.address)
 
-        if (findViewById<FrameLayout>(R.id.fragment_container_extra) != null) {
-            val intent = ConversationActivity.newIntent(this, user, pal)
-            startActivity(intent)
-        } else {
+        try {
+            findViewById<FrameLayout>(R.id.fragment_container_extra)
+
             val fragment = ConversationFragment.newInstance(user, pal)
 
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container_extra, fragment)
                     .commit()
+        } catch (e: Exception) {
+            val intent = ConversationActivity.newIntent(this, user, pal)
+            startActivity(intent)
         }
     }
-
 }

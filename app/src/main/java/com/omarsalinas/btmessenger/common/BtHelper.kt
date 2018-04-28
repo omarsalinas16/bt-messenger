@@ -16,11 +16,14 @@ class BtHelper {
 
     private val adapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
-    val enabled: Boolean get() = adapter?.isEnabled ?: false
-    val scanning: Boolean get() = adapter?.isDiscovering ?: false
+    val enabled: Boolean
+        get() = adapter?.isEnabled ?: throw Exception("Could not obtain BluetoothAdapter isEnabled")
+
+    val scanning: Boolean
+        get() = adapter?.isDiscovering ?: throw Exception("Could not obtain BluetoothAdapter isDiscovering")
 
     val address: String @SuppressLint("HardwareIds")
-        get() = adapter?.address ?: "00:00:00:00:00:00"
+        get() = adapter?.address ?: throw Exception("Could not obtain BluetoothAdapter address")
 
     fun cancelScan() {
         if (this.scanning) adapter?.cancelDiscovery()

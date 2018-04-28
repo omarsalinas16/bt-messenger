@@ -14,7 +14,7 @@ abstract class SimpleAdapter<T, V: SimpleHolder<T>> : RecyclerView.Adapter<V>() 
         holder.bind(this.list[position])
     }
 
-    fun add(item: T): Boolean {
+    open fun add(item: T): Boolean {
         return if (!this.list.contains(item)) {
             this.list.add(item)
             notifyItemInserted(this.list.size - 1)
@@ -25,7 +25,7 @@ abstract class SimpleAdapter<T, V: SimpleHolder<T>> : RecyclerView.Adapter<V>() 
         }
     }
 
-    fun clear() {
+    open fun clear() {
         val size = this.list.size
         this.list.clear()
         notifyItemRangeRemoved(0, size)

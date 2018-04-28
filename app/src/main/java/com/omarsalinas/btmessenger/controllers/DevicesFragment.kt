@@ -20,6 +20,7 @@ import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.BtHelper
 import com.omarsalinas.btmessenger.common.SimpleFragment
 import com.omarsalinas.btmessenger.controllers.adapters.DevicesAdapter
+import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.fragment_devices.*
 import kotlinx.android.synthetic.main.fragment_devices.view.*
 
@@ -66,6 +67,9 @@ class DevicesFragment : SimpleFragment() {
             onDeviceSelected(it)
         }
 
+        this.adapter.add(User("Fake", "00:00:00:00:00:00"))
+        this.adapter.add(User("Fake 2", "00:00:00:00:00:00"))
+
         setViewsById(view)
     }
 
@@ -106,9 +110,9 @@ class DevicesFragment : SimpleFragment() {
         }
     }
 
-    private fun onDeviceSelected(device: BluetoothDevice) {
+    private fun onDeviceSelected(user: User) {
         setScanning(false)
-        this.callbacks?.onDeviceSelected(device)
+        this.callbacks?.onDeviceSelected(user)
     }
 
     private fun onScanButtonClicked() {
@@ -179,7 +183,7 @@ class DevicesFragment : SimpleFragment() {
     }
 
     internal interface Callbacks {
-        fun onDeviceSelected(device: BluetoothDevice)
+        fun onDeviceSelected(pal: User)
     }
 
     private inner class BtReceiver : BroadcastReceiver() {
@@ -188,7 +192,8 @@ class DevicesFragment : SimpleFragment() {
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    adapter.add(device)
+                    val user = User(device.name, device.address)
+                    adapter.add(user)
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                     setScanning(false)

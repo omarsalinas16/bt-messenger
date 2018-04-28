@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="?android:attr/dividerHorizontal"
-    android:showDividers="middle"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:showDividers="middle">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_conversation_rv"
@@ -18,21 +18,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_5dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="@dimen/margin_18dp"
+        android:paddingTop="@dimen/margin_5dp">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/fragment_conversation_message_et"
+            style="@style/AppTheme.Widget.EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/background_rounded_stroke"
+            android:backgroundTint="@color/colorMedium"
             android:ellipsize="none"
-            android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+            android:inputType="textCapSentences|textAutoComplete|textAutoCorrect"
+            android:scrollHorizontally="false" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/fragment_conversation_send_btn"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/margin_10dp"
             app:srcCompat="@drawable/ic_send" />
 
     </LinearLayout>

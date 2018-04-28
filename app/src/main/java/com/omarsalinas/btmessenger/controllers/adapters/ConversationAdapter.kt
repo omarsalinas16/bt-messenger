@@ -27,6 +27,13 @@ class ConversationAdapter(
         return ConversationHolder(view)
     }
 
+    override fun add(item: Message): Boolean {
+        this.list.add(item)
+        notifyItemInserted(this.list.size - 1)
+
+        return true
+    }
+
     inner class ConversationHolder(view: View) : SimpleHolder<Message>(view) {
 
         private val nameText: TextView = view.item_message_name_txt
