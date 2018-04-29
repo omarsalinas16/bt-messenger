@@ -5,6 +5,7 @@ import android.support.annotation.NonNull
 import android.support.annotation.Nullable
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.dialogs.ErrorDialog
 import org.jetbrains.annotations.NotNull
@@ -16,6 +17,11 @@ object AppUtils {
     }
 
     fun setButtonActive(@Nullable button: Button?, active: Boolean) {
+        button?.isClickable = active
+        button?.alpha = if (active) 1.0f else 0.45f
+    }
+
+    fun setButtonActive(@Nullable button: ImageButton?, active: Boolean) {
         button?.isClickable = active
         button?.alpha = if (active) 1.0f else 0.45f
     }

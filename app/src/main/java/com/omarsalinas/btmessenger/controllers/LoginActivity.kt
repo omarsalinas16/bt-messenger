@@ -12,10 +12,12 @@ import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.AppCompatEditText
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.BtHelper
+import com.omarsalinas.btmessenger.common.BtHelperException
 import com.omarsalinas.btmessenger.common.SimpleActivity
 import com.omarsalinas.btmessenger.dialogs.ErrorDialog
 import com.omarsalinas.btmessenger.dialogs.SaveUserNameDialog
@@ -39,6 +41,7 @@ class LoginActivity : SimpleActivity() {
     }
 
     private var savedUserName: String = ""
+    private lateinit var btHelper: BtHelper
 
     private lateinit var userNameEditText: AppCompatEditText
     private lateinit var enterButton: AppCompatButton
@@ -51,17 +54,23 @@ class LoginActivity : SimpleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val missingPermissions = REQUIRED_SDK_PERMISSIONS.filter {
-                ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
+            this.btHelper = BtHelper()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val missingPermissions = REQUIRED_SDK_PERMISSIONS.filter {
+                    ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+                }
+
+                if (!missingPermissions.isEmpty()) {
+                    ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), REQUEST_CODE_ASK_PERMISSIONS)
+                }
             }
 
-            if (!missingPermissions.isEmpty()) {
-                ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), REQUEST_CODE_ASK_PERMISSIONS)
-            }
+            setViewsById()
+        } else {
+            AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
         }
-
-        setViewsById()
     }
 
     /**
@@ -89,11 +98,23 @@ class LoginActivity : SimpleActivity() {
             false
         }
 
+        this.userNameEditText.clearFocus()
+
         this.enterButton = this.activity_login_enter_btn
         this.enterButton.setOnClickListener { doLogin() }
 
         this.savedUserName = loadSavedUsername()
-        this.userNameEditText.setText(this.savedUserName)
+
+        if (AppUtils.stringNotEmpty(this.savedUserName)) {
+            this.userNameEditText.setText(this.savedUserName)
+        } else {
+            try {
+                val deviceName = this.btHelper.name
+                if (AppUtils.stringNotEmpty(deviceName)) this.userNameEditText.setText(deviceName)
+            } catch (e: BtHelperException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     /**
@@ -112,10 +133,8 @@ class LoginActivity : SimpleActivity() {
      */
     private fun doLogin() {
         try {
-            val btHelper = BtHelper()
-
             val userName = AppUtils.getEditTextValue(this.userNameEditText)
-            val user = User(userName, btHelper.address)
+            val user = User(userName, this.btHelper.address)
             // val user = User(userName, "00:00:00:00:00:00")
 
             if (userName != this.savedUserName) {
@@ -123,7 +142,7 @@ class LoginActivity : SimpleActivity() {
             } else {
                 openMainActivity(user)
             }
-        } catch (e: NullPointerException) {
+        } catch (e: BtHelperException) {
             AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
         }
     }

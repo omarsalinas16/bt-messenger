@@ -6,6 +6,8 @@ import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.AppCompatImageButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
@@ -70,6 +72,15 @@ class ConversationFragment : SimpleFragment() {
         this.messageEditText = view.fragment_conversation_message_et
         this.sendButton = view.fragment_conversation_send_btn
 
+        this.messageEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                AppUtils.setButtonActive(sendButton, AppUtils.stringNotEmpty(s))
+            }
+        })
+
         val layoutManager = LinearLayoutManager(this.context)
         layoutManager.stackFromEnd = true
 
@@ -79,10 +90,13 @@ class ConversationFragment : SimpleFragment() {
         this.sendButton.setOnClickListener {
             onSendButtonClicked()
         }
+
+        AppUtils.setButtonActive(sendButton, false)
     }
 
     private fun onSendButtonClicked() {
         sendMessage(createMessage())
+        this.messageEditText.setText("")
     }
 
     private fun createMessage(): Message {

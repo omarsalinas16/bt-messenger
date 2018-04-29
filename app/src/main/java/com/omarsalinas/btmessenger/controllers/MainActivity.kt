@@ -26,7 +26,7 @@ class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
         }
     }
 
-    override fun getLayoutId(): Int = R.layout.activity_double
+    override fun getLayoutId(): Int = R.layout.activity_main
 
     override fun createFragment(): Fragment {
         return DevicesFragment.newInstance()
@@ -35,15 +35,13 @@ class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
     override fun onDeviceSelected(pal: User) {
         val user = intent.getParcelableExtra<User>(EXTRA_USER)
 
-        try {
-            findViewById<FrameLayout>(R.id.fragment_container_extra)
-
+        if (getLayoutId() == R.layout.activity_double) {
             val fragment = ConversationFragment.newInstance(user, pal)
 
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container_extra, fragment)
                     .commit()
-        } catch (e: Exception) {
+        } else {
             val intent = ConversationActivity.newIntent(this, user, pal)
             startActivity(intent)
         }
