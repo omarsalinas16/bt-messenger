@@ -14,7 +14,7 @@ import java.util.*
  */
 data class Message(val content: String, @NonNull @NotNull val author: User) : Parcelable, Comparable<Message> {
 
-    private val timestamp: Date = Date()
+    val timestamp: Date = Date()
 
     val formattedDate: String
         get() {

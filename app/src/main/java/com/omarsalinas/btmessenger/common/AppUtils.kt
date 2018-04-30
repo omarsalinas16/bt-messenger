@@ -3,6 +3,7 @@ package com.omarsalinas.btmessenger.common
 import android.app.Activity
 import android.support.annotation.NonNull
 import android.support.annotation.Nullable
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -14,6 +15,10 @@ object AppUtils {
 
     fun stringNotEmpty(@Nullable string: CharSequence?): Boolean {
         return !string.isNullOrBlank() && !string.isNullOrEmpty()
+    }
+
+    fun setVisibility(@Nullable view: View?, visible: Boolean) {
+        view?.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setButtonActive(@Nullable button: Button?, active: Boolean) {

@@ -3,16 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/margin_5dp"
-    android:paddingTop="@dimen/margin_16dp">
+    android:paddingBottom="@dimen/margin_5dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginEnd="@dimen/margin_18dp"
-        android:layout_marginStart="@dimen/margin_18dp"
+        android:layout_marginEnd="@dimen/margin_10dp"
+        android:layout_marginStart="@dimen/margin_10dp"
         android:gravity="start"
         android:orientation="vertical">
 
@@ -22,7 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_5dp"
             android:layout_marginStart="@dimen/margin_10dp"
+            android:paddingTop="@dimen/margin_16dp"
             android:textSize="@dimen/small_text"
+            android:textColor="@color/colorPrimaryDark"
             tools:text="09 Jan 2018, 00:00" />
 
         <LinearLayout
@@ -43,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
                 tools:text="Username" />
 
             <android.support.v7.widget.AppCompatTextView
@@ -51,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:maxWidth="280dp"
+                android:textColor="@color/colorPrimaryDark"
                 tools:text="This is a sample message. This is a sample message. This is a sample message. This is a sample message." />
 
         </LinearLayout>

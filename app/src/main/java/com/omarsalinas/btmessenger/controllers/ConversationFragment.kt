@@ -2,10 +2,7 @@ package com.omarsalinas.btmessenger.controllers
 
 import android.os.Bundle
 import android.support.annotation.NonNull
-import android.support.v7.widget.AppCompatEditText
-import android.support.v7.widget.AppCompatImageButton
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -17,6 +14,8 @@ import com.omarsalinas.btmessenger.models.Message
 import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.fragment_conversation.view.*
 import org.jetbrains.annotations.NotNull
+import java.util.*
+import kotlin.concurrent.schedule
 
 class ConversationFragment : SimpleFragment() {
 
@@ -44,6 +43,8 @@ class ConversationFragment : SimpleFragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var messageEditText: AppCompatEditText
     private lateinit var sendButton: AppCompatImageButton
+    private lateinit var palNameText: AppCompatTextView
+    private lateinit var palAddressText: AppCompatTextView
 
     override fun getLayoutId(): Int = R.layout.fragment_conversation
 
@@ -52,25 +53,39 @@ class ConversationFragment : SimpleFragment() {
 
         this.user = arguments!!.getParcelable(BUNDLE_USER)
         this.pal = arguments!!.getParcelable(BUNDLE_PAL)
-
-        this.activity?.title = this.pal.userName
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         this.adapter = ConversationAdapter(this.user)
-
-        this.adapter.add(Message("Hi", this.pal))
-        this.adapter.add(Message("This is a test", this.pal))
-
         setViewsById(view)
+
+        setPalInfo(this.pal)
+
+        addMessage(Message("Hi", this.pal))
+        addMessage(Message("This is a test", this.pal))
+
+        addMessage(Message("Hello", this.user))
+
+        addMessage(Message("Lorem ipsum", this.pal))
+
+        addMessage(Message("Dolor sit", this.user))
+        addMessage(Message("Amet", this.user))
+
+        Timer("MESSAGE", false).schedule(60000) {
+            activity?.runOnUiThread {
+                addMessage(Message("Hello, I'm back after one minute", user))
+            }
+        }
     }
 
     private fun setViewsById(view: View) {
         this.recyclerView = view.fragment_conversation_rv
         this.messageEditText = view.fragment_conversation_message_et
         this.sendButton = view.fragment_conversation_send_btn
+        this.palNameText = view.fragment_conversation_pal_name_txt
+        this.palAddressText = view.fragment_conversation_pal_address_txt
 
         this.messageEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -95,7 +110,7 @@ class ConversationFragment : SimpleFragment() {
     }
 
     private fun onSendButtonClicked() {
-        sendMessage(createMessage())
+        addMessage(createMessage())
         this.messageEditText.setText("")
     }
 
@@ -103,9 +118,18 @@ class ConversationFragment : SimpleFragment() {
         return Message(AppUtils.getEditTextValue(this.messageEditText), this.user)
     }
 
-    private fun sendMessage(message: Message) {
+    private fun addMessage(message: Message) {
         this.adapter.add(message)
         this.recyclerView.smoothScrollToPosition(this.adapter.itemCount - 1)
+    }
+
+    private fun setPalInfo(pal: User) {
+        setPalInfo(pal.userName, pal.btAddress)
+    }
+
+    private fun setPalInfo(userName: String, address: String) {
+        this.palNameText.text = if (AppUtils.stringNotEmpty(userName)) userName else "Unknown"
+        this.palAddressText.text = address
     }
 
 }

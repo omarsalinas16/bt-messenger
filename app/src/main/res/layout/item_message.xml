@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/margin_16dp"
     android:paddingBottom="@dimen/margin_5dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/margin_18dp"
-        android:layout_marginStart="@dimen/margin_18dp"
+        android:layout_marginEnd="@dimen/margin_10dp"
+        android:layout_marginStart="@dimen/margin_10dp"
         android:gravity="end"
         android:orientation="vertical">
 
@@ -22,14 +21,16 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_5dp"
             android:layout_marginEnd="@dimen/margin_10dp"
+            android:layout_marginTop="@dimen/margin_16dp"
             android:textSize="@dimen/small_text"
+            android:textColor="@color/colorPrimaryDark"
             tools:text="09 Jan 2018, 00:00" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/background_rounded"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:gravity="end"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_5dp"
@@ -43,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:textStyle="bold"
+                android:textColor="@color/colorLight"
                 tools:text="Myself" />
 
             <android.support.v7.widget.AppCompatTextView
@@ -51,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:maxWidth="280dp"
+                android:textColor="@color/colorLight"
                 tools:text="This is a sample message. This is a sample message. This is a sample message. This is a sample message." />
 
         </LinearLayout>
