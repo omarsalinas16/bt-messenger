@@ -1,6 +1,7 @@
 package com.omarsalinas.btmessenger.controllers
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
@@ -12,12 +13,10 @@ import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.AppCompatEditText
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.BtHelper
-import com.omarsalinas.btmessenger.common.BtHelperException
 import com.omarsalinas.btmessenger.common.SimpleActivity
 import com.omarsalinas.btmessenger.dialogs.ErrorDialog
 import com.omarsalinas.btmessenger.dialogs.SaveUserNameDialog
@@ -40,8 +39,7 @@ class LoginActivity : SimpleActivity() {
         )
     }
 
-    private var savedUserName: String = ""
-    private lateinit var btHelper: BtHelper
+    private var btAdapter: BluetoothAdapter? = null
 
     private lateinit var userNameEditText: AppCompatEditText
     private lateinit var enterButton: AppCompatButton
@@ -55,7 +53,12 @@ class LoginActivity : SimpleActivity() {
         super.onCreate(savedInstanceState)
 
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
-            this.btHelper = BtHelper()
+            this.btAdapter = BluetoothAdapter.getDefaultAdapter()
+
+            if (this.btAdapter == null) {
+                AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
+                return
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val missingPermissions = REQUIRED_SDK_PERMISSIONS.filter {
@@ -68,62 +71,57 @@ class LoginActivity : SimpleActivity() {
             }
 
             setViewsById()
+            setViewListeners()
+
+            val savedUserName = loadSavedUserName()
+
+            if (AppUtils.stringNotEmpty(savedUserName)) {
+                this.userNameEditText.setText(savedUserName)
+            } else {
+                val deviceName = this.btAdapter?.name
+                if (AppUtils.stringNotEmpty(deviceName)) this.userNameEditText.setText(deviceName)
+            }
         } else {
             AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
         }
     }
 
     /**
-     * Load view widgets and set listeners
+     * Load view widgets
      */
     private fun setViewsById() {
         this.userNameEditText = this.activity_login_username_et
-
-        this.userNameEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                AppUtils.setButtonActive(enterButton, AppUtils.stringNotEmpty(s))
-            }
-        })
-
-        this.userNameEditText.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                if (AppUtils.stringNotEmpty(this.userNameEditText.text)) {
-                    doLogin()
-                }
-            }
-
-            false
-        }
-
-        this.userNameEditText.clearFocus()
-
         this.enterButton = this.activity_login_enter_btn
-        this.enterButton.setOnClickListener { doLogin() }
-
-        this.savedUserName = loadSavedUsername()
-
-        if (AppUtils.stringNotEmpty(this.savedUserName)) {
-            this.userNameEditText.setText(this.savedUserName)
-        } else {
-            try {
-                val deviceName = this.btHelper.name
-                if (AppUtils.stringNotEmpty(deviceName)) this.userNameEditText.setText(deviceName)
-            } catch (e: BtHelperException) {
-                e.printStackTrace()
-            }
-        }
     }
 
     /**
-     * Retrieve the saved username each time the activity is resumed to keep a real copy of the
-     * actually saved data and not just the in-memory variable
+     * Set view widgets listeners
      */
-    override fun onResume() {
-        super.onResume()
-        this.savedUserName = loadSavedUsername()
+    private fun setViewListeners() {
+        this.userNameEditText.apply {
+            addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    AppUtils.setButtonActive(enterButton, AppUtils.stringNotEmpty(s))
+                }
+            })
+
+            setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    if (AppUtils.stringNotEmpty(this.text)) {
+                        doLogin()
+                    }
+                }
+
+                false
+            }
+
+            clearFocus()
+        }
+
+        this.enterButton.setOnClickListener { doLogin() }
     }
 
     /**
@@ -132,17 +130,19 @@ class LoginActivity : SimpleActivity() {
      * adapter failed to set then display an error message.
      */
     private fun doLogin() {
-        try {
-            val userName = AppUtils.getEditTextValue(this.userNameEditText)
-            val user = User(userName, this.btHelper.address)
+        val userName = AppUtils.getEditTextValue(this.userNameEditText)
+        val address = BtHelper.getAddress(this)
+
+        if (AppUtils.stringNotEmpty(userName) && AppUtils.stringNotEmpty(address)) {
+            val user = User(userName, address)
             // val user = User(userName, "00:00:00:00:00:00")
 
-            if (userName != this.savedUserName) {
+            if (userName != loadSavedUserName()) {
                 getSaveUserNameDialog(user).show(this.supportFragmentManager)
             } else {
                 openMainActivity(user)
             }
-        } catch (e: BtHelperException) {
+        } else {
             AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
         }
     }
@@ -152,7 +152,7 @@ class LoginActivity : SimpleActivity() {
         startActivity(intent)
     }
 
-    private fun loadSavedUsername(): String {
+    private fun loadSavedUserName(): String {
         val preferenceManager = PreferenceManager.getDefaultSharedPreferences(this)
         return preferenceManager.getString(PREFS_USERNAME, "") ?: ""
     }

@@ -34,7 +34,7 @@ class DevicesFragment : SimpleFragment() {
         }
     }
 
-    private val btHelper: BtHelper = BtHelper()
+    private var btAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private val receiver: BtReceiver = BtReceiver()
     private var callbacks: Callbacks? = null
     private lateinit var adapter: DevicesAdapter
@@ -51,13 +51,6 @@ class DevicesFragment : SimpleFragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         this.callbacks = context as Callbacks
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val intent = BtHelper.getEnableIntent()
-        startActivityForResult(intent, BtHelper.REQUEST_ENABLE_BLUETOOTH)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,6 +81,12 @@ class DevicesFragment : SimpleFragment() {
     override fun onStart() {
         super.onStart()
         setScanning(false)
+
+        val adapter = this.btAdapter
+        if (adapter != null && adapter.isEnabled) {
+            val intent = BtHelper.getEnableIntent()
+            startActivityForResult(intent, BtHelper.REQUEST_ENABLE_BLUETOOTH)
+        }
     }
 
     override fun onStop() {
@@ -130,14 +129,15 @@ class DevicesFragment : SimpleFragment() {
                 this.receiverRegistered = true
             }
 
-            this.btHelper.startScan()
+            this.btAdapter?.startDiscovery()
         } else {
             if (this.receiverRegistered) {
                 this.activity?.unregisterReceiver(this.receiver)
                 this.receiverRegistered = false
             }
 
-            if (this.btHelper.scanning) this.btHelper.cancelScan()
+            val adapter = this.btAdapter
+            if (adapter != null && adapter.isDiscovering) adapter.cancelDiscovery()
         }
 
         setSpinnerVisible(this.scanning)
