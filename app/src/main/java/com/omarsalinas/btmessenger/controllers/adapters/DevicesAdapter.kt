@@ -13,7 +13,6 @@ import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.item_device.view.*
 
 class DevicesAdapter(
-        private val activity: Activity?,
         private val onDeviceSelected: (user: User) -> Unit
 ) : SimpleAdapter<User, DevicesAdapter.DevicesHolder>() {
 
@@ -38,9 +37,7 @@ class DevicesAdapter(
         override fun bind(item: User) {
             this.user = item
 
-            this.nameText.text = if (AppUtils.stringNotEmpty(this.user.userName)) this.user.userName
-            else activity?.getString(R.string.unknown)
-
+            this.nameText.text = this.user.userName
             this.addressText.text = this.user.address
         }
 

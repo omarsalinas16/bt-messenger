@@ -59,7 +59,7 @@ class DevicesFragment : SimpleFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.adapter = DevicesAdapter(this.activity) {
+        this.adapter = DevicesAdapter {
             onDeviceSelected(it)
         }
 
