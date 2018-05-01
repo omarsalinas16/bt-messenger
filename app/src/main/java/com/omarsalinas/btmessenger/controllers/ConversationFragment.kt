@@ -124,7 +124,7 @@ class ConversationFragment : SimpleFragment() {
     }
 
     private fun setPalInfo(pal: User) {
-        setPalInfo(pal.userName, pal.btAddress)
+        setPalInfo(pal.userName, pal.address)
     }
 
     private fun setPalInfo(userName: String, address: String) {

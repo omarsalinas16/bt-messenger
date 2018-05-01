@@ -5,12 +5,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_devices_rv"
+    <FrameLayout
+        android:id="@+id/fragment_devices_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_device" />
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_devices_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_device" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/fragment_devices_message_txt"
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/fragment_devices_message_txt_scan" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/fragment_devices_container"

@@ -135,7 +135,6 @@ class LoginActivity : SimpleActivity() {
 
         if (AppUtils.stringNotEmpty(userName) && AppUtils.stringNotEmpty(address)) {
             val user = User(userName, address)
-            // val user = User(userName, "00:00:00:00:00:00")
 
             if (userName != loadSavedUserName()) {
                 getSaveUserNameDialog(user).show(this.supportFragmentManager)

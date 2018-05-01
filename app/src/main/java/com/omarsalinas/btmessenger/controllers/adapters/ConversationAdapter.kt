@@ -23,7 +23,7 @@ class ConversationAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (user.btAddress == list[position].author.btAddress)
+        return if (user.address == list[position].author.address)
             R.layout.item_message
         else
             R.layout.item_message_incoming

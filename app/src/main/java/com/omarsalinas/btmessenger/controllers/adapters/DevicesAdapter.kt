@@ -41,7 +41,7 @@ class DevicesAdapter(
             this.nameText.text = if (AppUtils.stringNotEmpty(this.user.userName)) this.user.userName
             else activity?.getString(R.string.unknown)
 
-            this.addressText.text = this.user.btAddress
+            this.addressText.text = this.user.address
         }
 
     }

@@ -8,7 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v7.widget.AppCompatButton
+import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.transition.TransitionManager
@@ -44,6 +46,7 @@ class DevicesFragment : SimpleFragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var scanButton: AppCompatButton
+    private lateinit var messageText: AppCompatTextView
     private lateinit var spinner: ProgressBar
 
     override fun getLayoutId(): Int = R.layout.fragment_devices
@@ -60,21 +63,25 @@ class DevicesFragment : SimpleFragment() {
             onDeviceSelected(it)
         }
 
-        this.adapter.add(User("Fake", "00:00:00:00:00:00"))
-        this.adapter.add(User("Fake 2", "00:00:00:00:00:00"))
-
         setViewsById(view)
+        setViewListeners()
     }
 
     private fun setViewsById(view: View) {
         this.recyclerView = view.fragment_devices_rv
-        this.recyclerView.layoutManager = LinearLayoutManager(this.activity)
-        this.recyclerView.adapter = this.adapter
 
         this.spinner = view.fragment_devices_spinner
         this.spinner.isIndeterminate = true
 
         this.scanButton = view.fragment_devices_scan_btn
+
+        this.messageText = view.fragment_devices_message_txt
+    }
+
+    private fun setViewListeners() {
+        this.recyclerView.layoutManager = LinearLayoutManager(this.activity)
+        this.recyclerView.adapter = this.adapter
+
         this.scanButton.setOnClickListener { onScanButtonClicked() }
     }
 
@@ -82,10 +89,15 @@ class DevicesFragment : SimpleFragment() {
         super.onStart()
         setScanning(false)
 
-        val adapter = this.btAdapter
-        if (adapter != null && adapter.isEnabled) {
-            val intent = BtHelper.getEnableIntent()
-            startActivityForResult(intent, BtHelper.REQUEST_ENABLE_BLUETOOTH)
+        this.btAdapter?.let {
+            if (!it.isEnabled) {
+                val intent = BtHelper.getEnableIntent()
+                startActivityForResult(intent, BtHelper.REQUEST_ENABLE_BLUETOOTH)
+            }
+        }
+
+        if (this.adapter.itemCount <= 0) {
+            this.messageText.text = getString(R.string.fragment_devices_message_txt_scan)
         }
     }
 
@@ -103,7 +115,8 @@ class DevicesFragment : SimpleFragment() {
         when (requestCode) {
             BtHelper.REQUEST_ENABLE_BLUETOOTH -> {
                 if (resultCode != RESULT_OK) {
-                    AppUtils.getNoBluetoothErrorDialog(this.activity!!).show(this.fragmentManager)
+                    val activity = this.activity
+                    if (activity != null) AppUtils.getNoBluetoothErrorDialog(activity).show(this.fragmentManager)
                 }
             }
         }
@@ -130,6 +143,7 @@ class DevicesFragment : SimpleFragment() {
             }
 
             this.btAdapter?.startDiscovery()
+            setMessageVisibility(false)
         } else {
             if (this.receiverRegistered) {
                 this.activity?.unregisterReceiver(this.receiver)
@@ -138,6 +152,11 @@ class DevicesFragment : SimpleFragment() {
 
             val adapter = this.btAdapter
             if (adapter != null && adapter.isDiscovering) adapter.cancelDiscovery()
+
+            if (this.adapter.itemCount <= 0) {
+                this.messageText.text = getString(R.string.fragment_devices_message_txt_no_devices)
+                setMessageVisibility(true)
+            }
         }
 
         setSpinnerVisible(this.scanning)
@@ -174,6 +193,16 @@ class DevicesFragment : SimpleFragment() {
         this.spinner.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    private fun setMessageVisibility(visible: Boolean) {
+        try {
+            TransitionManager.beginDelayedTransition(this.fragment_devices_main)
+        } catch (e: Exception) {
+            Log.e(TAG, "Ignored transition, error: $e")
+        }
+
+        AppUtils.setVisibility(this.messageText, visible)
+    }
+
     private fun getReceiverIntentFilter(): IntentFilter {
         val filter = IntentFilter()
         filter.addAction(BluetoothDevice.ACTION_FOUND)
@@ -192,8 +221,7 @@ class DevicesFragment : SimpleFragment() {
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    val user = User(device.name, device.address)
-                    adapter.add(user)
+                    device?.let { adapter.add(User(it.name, it.address)) }
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                     setScanning(false)

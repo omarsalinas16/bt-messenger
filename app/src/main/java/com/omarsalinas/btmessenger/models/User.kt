@@ -2,16 +2,19 @@ package com.omarsalinas.btmessenger.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.Nullable
 
 /**
  * Represents a User with a non-unique [userName] and a Bluetooth MAC address
  * @param userName The username that identifies the user
- * @param btAddress The Bluetooth device address string
+ * @param address The Bluetooth device address string
  */
-data class User(val userName: String, val btAddress: String) : Parcelable, Comparable<User> {
+class User(@Nullable userName: String?, val address: String) : Comparable<User>, Parcelable {
+
+    val userName: String = userName ?: "Unknown"
 
     override fun compareTo(other: User): Int {
-        if (this.userName == other.userName && this.btAddress == other.btAddress) {
+        if (this.userName == other.userName && this.address == other.address) {
             return 0
         }
 
@@ -27,7 +30,7 @@ data class User(val userName: String, val btAddress: String) : Parcelable, Compa
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeString(userName)
-        writeString(btAddress)
+        writeString(address)
     }
 
     companion object {
