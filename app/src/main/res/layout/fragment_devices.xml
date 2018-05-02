@@ -50,6 +50,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="@dimen/margin_10dp"
+            android:indeterminate="true"
             android:visibility="gone"
             tools:visibility="visible" />
 

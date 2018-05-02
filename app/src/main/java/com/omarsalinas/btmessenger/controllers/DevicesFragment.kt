@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.annotation.StringRes
 import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
@@ -18,9 +17,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import com.omarsalinas.btmessenger.R
-import com.omarsalinas.btmessenger.common.AppUtils
-import com.omarsalinas.btmessenger.common.BtHelper
-import com.omarsalinas.btmessenger.common.SimpleFragment
+import com.omarsalinas.btmessenger.common.*
 import com.omarsalinas.btmessenger.controllers.adapters.DevicesAdapter
 import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.fragment_devices.*
@@ -35,6 +32,8 @@ class DevicesFragment : SimpleFragment() {
             return DevicesFragment()
         }
     }
+
+    private var devices: ArrayList<User> = arrayListOf()
 
     private var btAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private val receiver: BtReceiver = BtReceiver()
@@ -59,9 +58,10 @@ class DevicesFragment : SimpleFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.adapter = DevicesAdapter {
-            onDeviceSelected(it)
-        }
+        this.adapter = DevicesAdapter(
+                { onDeviceSelected(it) },
+                { this.devices }
+        )
 
         setViewsById(view)
         setViewListeners()
@@ -69,12 +69,8 @@ class DevicesFragment : SimpleFragment() {
 
     private fun setViewsById(view: View) {
         this.recyclerView = view.fragment_devices_rv
-
         this.spinner = view.fragment_devices_spinner
-        this.spinner.isIndeterminate = true
-
         this.scanButton = view.fragment_devices_scan_btn
-
         this.messageText = view.fragment_devices_message_txt
     }
 
@@ -87,17 +83,26 @@ class DevicesFragment : SimpleFragment() {
 
     override fun onStart() {
         super.onStart()
-        setScanning(false)
 
         this.btAdapter?.let {
             if (!it.isEnabled) {
-                val intent = BtHelper.getEnableIntent()
-                startActivityForResult(intent, BtHelper.REQUEST_ENABLE_BLUETOOTH)
+                val intent = BtController.getEnableIntent()
+                startActivityForResult(intent, BtController.REQUEST_ENABLE_BLUETOOTH)
             }
         }
 
+        this.adapter.clear()
+        this.btAdapter?.bondedDevices?.forEach {
+            it?.let { this.adapter.add(User(it.name, it.address)) }
+        }
+
+        setScanning(false)
+
         if (this.adapter.itemCount <= 0) {
             this.messageText.text = getString(R.string.fragment_devices_message_txt_scan)
+            setMessageVisibility(true)
+        } else {
+            setMessageVisibility(false)
         }
     }
 
@@ -113,7 +118,7 @@ class DevicesFragment : SimpleFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            BtHelper.REQUEST_ENABLE_BLUETOOTH -> {
+            BtController.REQUEST_ENABLE_BLUETOOTH -> {
                 if (resultCode != RESULT_OK) {
                     val activity = this.activity
                     if (activity != null) AppUtils.getNoBluetoothErrorDialog(activity).show(this.fragmentManager)
@@ -164,11 +169,7 @@ class DevicesFragment : SimpleFragment() {
     }
 
     private fun setScanButtonState(scanning: Boolean) {
-        try {
-            TransitionManager.beginDelayedTransition(this.fragment_devices_container)
-        } catch (e: Exception) {
-            Log.e(TAG, "Ignored transition, error: $e")
-        }
+        AppUtils.startTransition(this.fragment_devices_container)
 
         this.scanButton.text = if (scanning) {
             this.activity?.getString(R.string.fragment_devices_scan_btn_stop)
@@ -184,22 +185,12 @@ class DevicesFragment : SimpleFragment() {
     }
 
     private fun setSpinnerVisible(visible: Boolean) {
-        try {
-            TransitionManager.beginDelayedTransition(this.fragment_devices_container)
-        } catch (e: Exception) {
-            Log.e(TAG, "Ignored transition, error: $e")
-        }
-
+        AppUtils.startTransition(this.fragment_devices_container)
         this.spinner.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun setMessageVisibility(visible: Boolean) {
-        try {
-            TransitionManager.beginDelayedTransition(this.fragment_devices_main)
-        } catch (e: Exception) {
-            Log.e(TAG, "Ignored transition, error: $e")
-        }
-
+        AppUtils.startTransition(this.fragment_devices_main)
         AppUtils.setVisibility(this.messageText, visible)
     }
 

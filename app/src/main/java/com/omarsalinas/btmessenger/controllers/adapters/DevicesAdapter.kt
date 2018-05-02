@@ -1,20 +1,20 @@
 package com.omarsalinas.btmessenger.controllers.adapters
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.omarsalinas.btmessenger.R
-import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.SimpleAdapter
 import com.omarsalinas.btmessenger.common.SimpleHolder
 import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.item_device.view.*
+import java.util.ArrayList
 
 class DevicesAdapter(
-        private val onDeviceSelected: (user: User) -> Unit
-) : SimpleAdapter<User, DevicesAdapter.DevicesHolder>() {
+        private val onDeviceSelected: (user: User) -> Unit,
+        getter: () -> ArrayList<User>
+) : SimpleAdapter<User, DevicesAdapter.DevicesHolder>(getter) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DevicesHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_device, parent, false)

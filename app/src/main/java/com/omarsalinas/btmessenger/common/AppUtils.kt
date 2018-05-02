@@ -3,7 +3,10 @@ package com.omarsalinas.btmessenger.common
 import android.app.Activity
 import android.support.annotation.NonNull
 import android.support.annotation.Nullable
+import android.transition.TransitionManager
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -41,6 +44,14 @@ object AppUtils {
 
         return ErrorDialog.newInstance(title, message) {
             activity.finishAndRemoveTask()
+        }
+    }
+
+    fun startTransition(group: ViewGroup) {
+        try {
+            TransitionManager.beginDelayedTransition(group)
+        } catch (e: Exception) {
+            Log.e("START_TRANSITION", "Ignored transition, error: $e")
         }
     }
 

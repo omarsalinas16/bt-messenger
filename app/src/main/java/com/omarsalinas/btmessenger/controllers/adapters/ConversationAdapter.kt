@@ -13,10 +13,12 @@ import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.item_message.view.*
 import org.joda.time.DateTime
 import org.joda.time.Minutes
+import java.util.ArrayList
 
 class ConversationAdapter(
-        private val user: User
-) : SimpleAdapter<Message, ConversationAdapter.ConversationHolder>() {
+        private val user: User,
+        getter: () -> ArrayList<Message>
+) : SimpleAdapter<Message, ConversationAdapter.ConversationHolder>(getter) {
 
     companion object {
         private val MINUTES_TO_JOIN: Minutes = Minutes.ONE

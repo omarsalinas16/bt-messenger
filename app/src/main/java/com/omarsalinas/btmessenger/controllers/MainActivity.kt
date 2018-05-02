@@ -4,12 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
-import android.util.Log
-import android.widget.FrameLayout
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.FragmentActivity
 import com.omarsalinas.btmessenger.models.User
-import kotlinx.android.synthetic.main.activity_double.*
 import org.jetbrains.annotations.NotNull
 
 class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {

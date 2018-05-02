@@ -4,7 +4,6 @@
     <!-- Common strings -->
     <string name="welcome">Welcome</string>
     <string name="enter">Enter</string>
-    <string name="unknown">Unknown</string>
 
     <!-- Error strings -->
     <string name="error_no_bluetooth">Not compatible</string>
@@ -21,5 +20,16 @@
     <string name="fragment_devices_scan_btn_start">Scan devices</string>
     <string name="fragment_devices_scan_btn_stop">Stop scanning</string>
     <string name="fragment_devices_message_txt_no_devices">No devices available\nPlease scan again</string>
-    <string name="fragment_devices_message_txt_scan">Tap scan to discover available devices</string>
+    <string name="fragment_devices_message_txt_scan">Tap scan to discover\navailable devices</string>
+
+    <!-- fragment-conversation -->
+    <string name="fragment_conversation_connect_btn_text">Connect</string>
+    <string name="fragment_conversation_connect_help_text">While the other device listens for connection click on Connect (Only one device need to click connect)</string>
+
+    <!-- BtController -->
+    <string name="bt_helper_connecting">Connecting to device…</string>
+    <string name="bt_helper_connected">Connection established!</string>
+    <string name="bt_helper_unable">Unable to connect to device</string>
+    <string name="bt_helper_lost">Connection was lost or interrupted</string>
+    <string name="bt_helper_listening">Your device is listening for connections</string>
 </resources>

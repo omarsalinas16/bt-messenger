@@ -4,9 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import java.util.ArrayList
 
-abstract class SimpleAdapter<T, V: SimpleHolder<T>> : RecyclerView.Adapter<V>() {
+abstract class SimpleAdapter<T, V: SimpleHolder<T>>(
+        protected val getter: () -> ArrayList<T>
+) : RecyclerView.Adapter<V>() {
 
-    protected val list: ArrayList<T> = arrayListOf()
+    protected val list: ArrayList<T>
+        get() = getter()
 
     override fun getItemCount(): Int = this.list.size
 

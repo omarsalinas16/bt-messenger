@@ -16,7 +16,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
-import com.omarsalinas.btmessenger.common.BtHelper
+import com.omarsalinas.btmessenger.common.BtController
 import com.omarsalinas.btmessenger.common.SimpleActivity
 import com.omarsalinas.btmessenger.dialogs.ErrorDialog
 import com.omarsalinas.btmessenger.dialogs.SaveUserNameDialog
@@ -131,7 +131,7 @@ class LoginActivity : SimpleActivity() {
      */
     private fun doLogin() {
         val userName = AppUtils.getEditTextValue(this.userNameEditText)
-        val address = BtHelper.getAddress(this)
+        val address = BtController.getAddress(this)
 
         if (AppUtils.stringNotEmpty(userName) && AppUtils.stringNotEmpty(address)) {
             val user = User(userName, address)
