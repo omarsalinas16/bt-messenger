@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome">Bienvenido</string>
+    <string name="enter">Iniciar</string>
+    <string name="unknown">Desconocido</string>
+    <string name="paired">Vinculado</string>
+    <string name="error_no_bluetooth">No compatible</string>
+    <string name="error_no_bluetooth_message">Su dispositivo no soporta Bluetooth, no es posible continuar</string>
+    <string name="error_missing_permissions">Falló la obtención de permisos</string>
+    <string name="error_missing_permissions_message">Los permisos necesarios no fueron otorgados, no es posible continuar</string>
+    <string name="fragment_login_username_et_hint">Su nombre de usuario</string>
+    <string name="fragment_login_save_username">Guardar nombre de usuario</string>
+    <string name="fragment_login_save_username_message">Guardar %s como nombre de usuario preferido?</string>
+    <string name="fragment_login_save_username_saved">Nombre predefinido actualizado a %s</string>
+    <string name="fragment_devices_scan_btn_start">Buscar dispositivos</string>
+    <string name="fragment_devices_scan_btn_stop">Detener búsqueda</string>
+    <string name="fragment_devices_message_txt_no_devices">No hay dispositivos disponibles\\nPorfavor intente otra vez</string>
+    <string name="fragment_devices_message_txt_scan">Presione \"buscar dispositivos\"</string>
+    <string name="fragment_conversation_connect_btn_text">Conectar</string>
+    <string name="fragment_conversation_connect_help_text">Mientras el otro dispositivo se encuentre esperando una conexión haga click en Conectar (Solamente es necesario que un dispositivo haga click)</string>
+    <string name="bt_helper_connecting">Conectandoce a dispositivo…</string>
+    <string name="bt_helper_connected">Conexión establecida!</string>
+    <string name="bt_helper_unable">No fue posible conectarse</string>
+    <string name="bt_helper_lost">Se perdió la conexión o fue interrumpida</string>
+    <string name="bt_helper_listening">El dispositivo está esperando conexiones</string>
+</resources>
