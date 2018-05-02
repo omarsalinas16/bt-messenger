@@ -43,7 +43,7 @@ class DevicesAdapter(
             this.nameText.text = this.device.name
             this.addressText.text = this.device.address
 
-            if (item.paired) AppUtils.setVisibility(this.pairedText, true)
+            AppUtils.setVisibility(this.pairedText, item.paired)
         }
 
     }
