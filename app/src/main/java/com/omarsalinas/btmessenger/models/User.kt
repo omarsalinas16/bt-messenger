@@ -13,6 +13,14 @@ class User(@Nullable userName: String?, val address: String) : Comparable<User>,
 
     val userName: String = userName ?: "Unknown"
 
+    override fun equals(other: Any?): Boolean {
+        return if (other is User) {
+            compareTo(other) == 0
+        } else {
+            false
+        }
+    }
+
     override fun compareTo(other: User): Int {
         if (this.userName == other.userName && this.address == other.address) {
             return 0
@@ -31,6 +39,12 @@ class User(@Nullable userName: String?, val address: String) : Comparable<User>,
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeString(userName)
         writeString(address)
+    }
+
+    override fun hashCode(): Int {
+        var result = address.hashCode()
+        result = 31 * result + userName.hashCode()
+        return result
     }
 
     companion object {

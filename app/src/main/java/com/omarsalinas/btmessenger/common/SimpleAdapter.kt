@@ -5,7 +5,7 @@ import android.view.View
 import java.util.ArrayList
 
 abstract class SimpleAdapter<T, V: SimpleHolder<T>>(
-        protected val getter: () -> ArrayList<T>
+        private val getter: () -> ArrayList<T>
 ) : RecyclerView.Adapter<V>() {
 
     protected val list: ArrayList<T>

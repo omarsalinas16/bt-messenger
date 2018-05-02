@@ -14,6 +14,7 @@ import android.support.v7.widget.AppCompatEditText
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
+import android.widget.Toast
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.BtController
@@ -26,7 +27,6 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : SimpleActivity() {
 
     companion object {
-        private const val TAG: String = "LOGIN_ACTIVITY"
         private const val REQUEST_CODE_ASK_PERMISSIONS: Int = 0x0001
         private const val PREFS_USERNAME = "com.omarsalinas.btmessenger.prefs_username"
 
@@ -39,7 +39,7 @@ class LoginActivity : SimpleActivity() {
         )
     }
 
-    private var btAdapter: BluetoothAdapter? = null
+    private var bluetoothAdapter: BluetoothAdapter? = null
 
     private lateinit var userNameEditText: AppCompatEditText
     private lateinit var enterButton: AppCompatButton
@@ -53,9 +53,9 @@ class LoginActivity : SimpleActivity() {
         super.onCreate(savedInstanceState)
 
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
-            this.btAdapter = BluetoothAdapter.getDefaultAdapter()
+            this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
-            if (this.btAdapter == null) {
+            if (this.bluetoothAdapter == null) {
                 AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
                 return
             }
@@ -78,7 +78,7 @@ class LoginActivity : SimpleActivity() {
             if (AppUtils.stringNotEmpty(savedUserName)) {
                 this.userNameEditText.setText(savedUserName)
             } else {
-                val deviceName = this.btAdapter?.name
+                val deviceName = this.bluetoothAdapter?.name
                 if (AppUtils.stringNotEmpty(deviceName)) this.userNameEditText.setText(deviceName)
             }
         } else {
@@ -133,7 +133,7 @@ class LoginActivity : SimpleActivity() {
         val userName = AppUtils.getEditTextValue(this.userNameEditText)
         val address = BtController.getAddress(this)
 
-        if (AppUtils.stringNotEmpty(userName) && AppUtils.stringNotEmpty(address)) {
+        if (AppUtils.stringsNotEmpty(userName, address)) {
             val user = User(userName, address)
 
             if (userName != loadSavedUserName()) {
@@ -160,6 +160,8 @@ class LoginActivity : SimpleActivity() {
         PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putString(PREFS_USERNAME, userName)
                 .apply()
+
+        toast(getString(R.string.fragment_login_save_username_saved, userName), Toast.LENGTH_LONG)
     }
 
     /**
@@ -170,7 +172,7 @@ class LoginActivity : SimpleActivity() {
     private fun getSaveUserNameDialog(user: User): SaveUserNameDialog {
         return SaveUserNameDialog.newInstance(
                 user.userName,
-                { _: DialogInterface? ->
+                {
                     saveUsernameToPrefs(user.userName)
                     openMainActivity(user)
                 },

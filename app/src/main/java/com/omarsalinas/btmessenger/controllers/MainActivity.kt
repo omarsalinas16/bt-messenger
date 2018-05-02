@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull
 class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
 
     companion object {
-        private const val TAG: String = "DEVICES_ACTIVITY"
         private const val EXTRA_USER: String = "com.omarsalinas.btmessenger.extra_user"
 
         fun newIntent(context: Context?, @NonNull @NotNull user: User): Intent {

@@ -21,6 +21,14 @@ data class Message(val content: String, @NonNull @NotNull val author: User) : Pa
             return SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.US).format(this.timestamp)
         }
 
+    override fun equals(other: Any?): Boolean {
+        return if (other is Message) {
+            return compareTo(other) == 0
+        } else {
+            false
+        }
+    }
+
     override fun compareTo(other: Message): Int {
         if (this.content == other.content && this.author == other.author && this.timestamp == other.timestamp) {
             return 0
@@ -39,6 +47,13 @@ data class Message(val content: String, @NonNull @NotNull val author: User) : Pa
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeString(content)
         writeParcelable(author, 0)
+    }
+
+    override fun hashCode(): Int {
+        var result = content.hashCode()
+        result = 31 * result + author.hashCode()
+        result = 31 * result + timestamp.hashCode()
+        return result
     }
 
     companion object {

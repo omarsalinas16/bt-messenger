@@ -12,8 +12,6 @@ import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.transition.TransitionManager
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import com.omarsalinas.btmessenger.R
@@ -23,7 +21,7 @@ import com.omarsalinas.btmessenger.models.User
 import kotlinx.android.synthetic.main.fragment_devices.*
 import kotlinx.android.synthetic.main.fragment_devices.view.*
 
-class DevicesFragment : SimpleFragment() {
+class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
 
     companion object {
         private const val TAG: String = "DEVICES_FRAGMENT"
@@ -35,10 +33,11 @@ class DevicesFragment : SimpleFragment() {
 
     private var devices: ArrayList<User> = arrayListOf()
 
-    private var btAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-    private val receiver: BtReceiver = BtReceiver()
+    private var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    private val bluetoothReceiver: BluetoothReceiver = BluetoothReceiver()
     private var callbacks: Callbacks? = null
-    private lateinit var adapter: DevicesAdapter
+
+    private var devicesAdapter: DevicesAdapter = DevicesAdapter(this) { this.devices }
 
     private var scanning: Boolean = false
     private var receiverRegistered: Boolean = false
@@ -58,11 +57,6 @@ class DevicesFragment : SimpleFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.adapter = DevicesAdapter(
-                { onDeviceSelected(it) },
-                { this.devices }
-        )
-
         setViewsById(view)
         setViewListeners()
     }
@@ -76,7 +70,7 @@ class DevicesFragment : SimpleFragment() {
 
     private fun setViewListeners() {
         this.recyclerView.layoutManager = LinearLayoutManager(this.activity)
-        this.recyclerView.adapter = this.adapter
+        this.recyclerView.adapter = this.devicesAdapter
 
         this.scanButton.setOnClickListener { onScanButtonClicked() }
     }
@@ -84,31 +78,28 @@ class DevicesFragment : SimpleFragment() {
     override fun onStart() {
         super.onStart()
 
-        this.btAdapter?.let {
+        this.bluetoothAdapter?.let {
             if (!it.isEnabled) {
                 val intent = BtController.getEnableIntent()
                 startActivityForResult(intent, BtController.REQUEST_ENABLE_BLUETOOTH)
             }
         }
 
-        this.adapter.clear()
-        this.btAdapter?.bondedDevices?.forEach {
-            it?.let { this.adapter.add(User(it.name, it.address)) }
-        }
+        loadBondedDevices()
 
-        setScanning(false)
-
-        if (this.adapter.itemCount <= 0) {
+        if (this.devicesAdapter.itemCount <= 0) {
             this.messageText.text = getString(R.string.fragment_devices_message_txt_scan)
             setMessageVisibility(true)
         } else {
             setMessageVisibility(false)
         }
+
+        setScanning(false, false)
     }
 
     override fun onStop() {
         super.onStop()
-        setScanning(false)
+        setScanning(false, false)
     }
 
     override fun onDetach() {
@@ -127,8 +118,8 @@ class DevicesFragment : SimpleFragment() {
         }
     }
 
-    private fun onDeviceSelected(user: User) {
-        setScanning(false)
+    override fun onDeviceSelected(user: User) {
+        setScanning(false, false)
         this.callbacks?.onDeviceSelected(user)
     }
 
@@ -136,29 +127,37 @@ class DevicesFragment : SimpleFragment() {
         setScanning(!this.scanning)
     }
 
-    private fun setScanning(scanning: Boolean) {
+    private fun loadBondedDevices() {
+        this.bluetoothAdapter?.bondedDevices?.forEach {
+            it?.let { this.devicesAdapter.add(User(it.name, it.address)) }
+        }
+    }
+
+    private fun setScanning(scanning: Boolean, updateText: Boolean = true) {
         this.scanning = scanning
 
         if (this.scanning) {
-            this.adapter.clear()
+            this.devicesAdapter.clear()
+
+            loadBondedDevices()
 
             if (!this.receiverRegistered) {
-                this.activity?.registerReceiver(this.receiver, getReceiverIntentFilter())
+                this.activity?.registerReceiver(this.bluetoothReceiver, getReceiverIntentFilter())
                 this.receiverRegistered = true
             }
 
-            this.btAdapter?.startDiscovery()
+            this.bluetoothAdapter?.startDiscovery()
             setMessageVisibility(false)
         } else {
             if (this.receiverRegistered) {
-                this.activity?.unregisterReceiver(this.receiver)
+                this.activity?.unregisterReceiver(this.bluetoothReceiver)
                 this.receiverRegistered = false
             }
 
-            val adapter = this.btAdapter
+            val adapter = this.bluetoothAdapter
             if (adapter != null && adapter.isDiscovering) adapter.cancelDiscovery()
 
-            if (this.adapter.itemCount <= 0) {
+            if (updateText && this.devicesAdapter.itemCount <= 0) {
                 this.messageText.text = getString(R.string.fragment_devices_message_txt_no_devices)
                 setMessageVisibility(true)
             }
@@ -206,13 +205,13 @@ class DevicesFragment : SimpleFragment() {
         fun onDeviceSelected(pal: User)
     }
 
-    private inner class BtReceiver : BroadcastReceiver() {
+    private inner class BluetoothReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    device?.let { adapter.add(User(it.name, it.address)) }
+                    device?.let { devicesAdapter.add(User(it.name, it.address)) }
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                     setScanning(false)

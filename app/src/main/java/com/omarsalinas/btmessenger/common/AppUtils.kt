@@ -20,6 +20,11 @@ object AppUtils {
         return !string.isNullOrBlank() && !string.isNullOrEmpty()
     }
 
+    fun stringsNotEmpty(@Nullable vararg strings: String?): Boolean {
+        strings.forEach { if (!stringNotEmpty(it)) return false }
+        return true
+    }
+
     fun setVisibility(@Nullable view: View?, visible: Boolean) {
         view?.visibility = if (visible) View.VISIBLE else View.GONE
     }

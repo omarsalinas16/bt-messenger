@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.omarsalinas.btmessenger.R
+import com.omarsalinas.btmessenger.common.BtHandler
 import com.omarsalinas.btmessenger.common.SimpleAdapter
 import com.omarsalinas.btmessenger.common.SimpleHolder
 import com.omarsalinas.btmessenger.models.User
@@ -12,7 +13,7 @@ import kotlinx.android.synthetic.main.item_device.view.*
 import java.util.ArrayList
 
 class DevicesAdapter(
-        private val onDeviceSelected: (user: User) -> Unit,
+        private val callbacks: Callbacks,
         getter: () -> ArrayList<User>
 ) : SimpleAdapter<User, DevicesAdapter.DevicesHolder>(getter) {
 
@@ -30,7 +31,7 @@ class DevicesAdapter(
 
         init {
             view.setOnClickListener {
-                onDeviceSelected(this.user)
+                callbacks.onDeviceSelected(this.user)
             }
         }
 
@@ -41,6 +42,10 @@ class DevicesAdapter(
             this.addressText.text = this.user.address
         }
 
+    }
+
+    interface Callbacks {
+        fun onDeviceSelected(user: User)
     }
 
 }
