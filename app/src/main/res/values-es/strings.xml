@@ -14,7 +14,7 @@
     <string name="fragment_login_save_username_saved">Nombre predefinido actualizado a %s</string>
     <string name="fragment_devices_scan_btn_start">Buscar dispositivos</string>
     <string name="fragment_devices_scan_btn_stop">Detener búsqueda</string>
-    <string name="fragment_devices_message_txt_no_devices">No hay dispositivos disponibles\\nPorfavor intente otra vez</string>
+    <string name="fragment_devices_message_txt_no_devices">No hay dispositivos disponibles\nPorfavor intente otra vez</string>
     <string name="fragment_devices_message_txt_scan">Presione \"buscar dispositivos\"</string>
     <string name="fragment_conversation_connect_btn_text">Conectar</string>
     <string name="fragment_conversation_connect_help_text">Mientras el otro dispositivo se encuentre esperando una conexión haga click en Conectar (Solamente es necesario que un dispositivo haga click)</string>
