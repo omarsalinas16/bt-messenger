@@ -7,10 +7,6 @@ import com.omarsalinas.btmessenger.R
 
 abstract class FragmentActivity : SimpleActivity() {
 
-    companion object {
-        private const val TAG: String = "FRAGMENT_ACTIVITY"
-    }
-
     override fun getLayoutId(): Int = R.layout.activity_fragment
     protected abstract fun createFragment(): Fragment
 

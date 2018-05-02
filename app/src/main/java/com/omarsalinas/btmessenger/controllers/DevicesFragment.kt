@@ -17,26 +17,23 @@ import android.widget.ProgressBar
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.*
 import com.omarsalinas.btmessenger.controllers.adapters.DevicesAdapter
-import com.omarsalinas.btmessenger.models.User
+import com.omarsalinas.btmessenger.models.Device
 import kotlinx.android.synthetic.main.fragment_devices.*
 import kotlinx.android.synthetic.main.fragment_devices.view.*
 
 class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
 
     companion object {
-        private const val TAG: String = "DEVICES_FRAGMENT"
-
         fun newInstance(): DevicesFragment {
             return DevicesFragment()
         }
     }
 
-    private var devices: ArrayList<User> = arrayListOf()
-
     private var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private val bluetoothReceiver: BluetoothReceiver = BluetoothReceiver()
     private var callbacks: Callbacks? = null
 
+    private var devices: ArrayList<Device> = arrayListOf()
     private var devicesAdapter: DevicesAdapter = DevicesAdapter(this) { this.devices }
 
     private var scanning: Boolean = false
@@ -78,11 +75,9 @@ class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
     override fun onStart() {
         super.onStart()
 
-        this.bluetoothAdapter?.let {
-            if (!it.isEnabled) {
-                val intent = BtController.getEnableIntent()
-                startActivityForResult(intent, BtController.REQUEST_ENABLE_BLUETOOTH)
-            }
+        if (this.bluetoothAdapter != null && this.bluetoothAdapter?.isEnabled == false) {
+            val intent = BtController.getEnableIntent()
+            startActivityForResult(intent, BtController.REQUEST_ENABLE_BLUETOOTH)
         }
 
         loadBondedDevices()
@@ -107,20 +102,9 @@ class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
         this.callbacks = null
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            BtController.REQUEST_ENABLE_BLUETOOTH -> {
-                if (resultCode != RESULT_OK) {
-                    val activity = this.activity
-                    if (activity != null) AppUtils.getNoBluetoothErrorDialog(activity).show(this.fragmentManager)
-                }
-            }
-        }
-    }
-
-    override fun onDeviceSelected(user: User) {
+    override fun onDeviceSelected(device: Device) {
         setScanning(false, false)
-        this.callbacks?.onDeviceSelected(user)
+        this.callbacks?.onDeviceSelected(device)
     }
 
     private fun onScanButtonClicked() {
@@ -129,7 +113,7 @@ class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
 
     private fun loadBondedDevices() {
         this.bluetoothAdapter?.bondedDevices?.forEach {
-            it?.let { this.devicesAdapter.add(User(it.name, it.address)) }
+            it?.let { addDevice(it.name, it.address, true) }
         }
     }
 
@@ -183,6 +167,13 @@ class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
         )
     }
 
+    private fun addDevice(name: String?, address: String, paired: Boolean = false) {
+        this.devicesAdapter.add(Device(
+                if (AppUtils.stringNotEmpty(name)) name else getString(R.string.unknown),
+                address, paired)
+        )
+    }
+
     private fun setSpinnerVisible(visible: Boolean) {
         AppUtils.startTransition(this.fragment_devices_container)
         this.spinner.visibility = if (visible) View.VISIBLE else View.GONE
@@ -201,8 +192,19 @@ class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
         return filter
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            BtController.REQUEST_ENABLE_BLUETOOTH -> {
+                if (resultCode != RESULT_OK) {
+                    val activity = this.activity
+                    if (activity != null) AppUtils.getNoBluetoothErrorDialog(activity).show(this.fragmentManager)
+                }
+            }
+        }
+    }
+
     internal interface Callbacks {
-        fun onDeviceSelected(pal: User)
+        fun onDeviceSelected(palDevice: Device)
     }
 
     private inner class BluetoothReceiver : BroadcastReceiver() {
@@ -211,7 +213,7 @@ class DevicesFragment : SimpleFragment(), DevicesAdapter.Callbacks {
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    device?.let { devicesAdapter.add(User(it.name, it.address)) }
+                    device?.let { addDevice(it.name, it.address) }
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                     setScanning(false)

@@ -9,7 +9,6 @@ import com.omarsalinas.btmessenger.common.SimpleDialog
 class SaveUserNameDialog : SimpleDialog() {
 
     companion object {
-        private const val TAG: String = "SAVE_USERNAME_DIALOG"
         private const val BUNDLE_USERNAME = "com.omarsalinas.btmessenger.bundle_username"
 
         fun newInstance(userName: String, onPositive: (dialog: DialogInterface?) -> Unit, onCancel: () -> Unit): SaveUserNameDialog {

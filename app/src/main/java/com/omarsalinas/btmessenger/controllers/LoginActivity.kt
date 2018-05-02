@@ -2,7 +2,6 @@ package com.omarsalinas.btmessenger.controllers
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -21,7 +20,7 @@ import com.omarsalinas.btmessenger.common.BtController
 import com.omarsalinas.btmessenger.common.SimpleActivity
 import com.omarsalinas.btmessenger.dialogs.ErrorDialog
 import com.omarsalinas.btmessenger.dialogs.SaveUserNameDialog
-import com.omarsalinas.btmessenger.models.User
+import com.omarsalinas.btmessenger.models.Device
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : SimpleActivity() {
@@ -134,20 +133,20 @@ class LoginActivity : SimpleActivity() {
         val address = BtController.getAddress(this)
 
         if (AppUtils.stringsNotEmpty(userName, address)) {
-            val user = User(userName, address)
+            val currentDevice = Device(userName, address)
 
             if (userName != loadSavedUserName()) {
-                getSaveUserNameDialog(user).show(this.supportFragmentManager)
+                getSaveUserNameDialog(currentDevice).show(this.supportFragmentManager)
             } else {
-                openMainActivity(user)
+                openMainActivity(currentDevice)
             }
         } else {
             AppUtils.getNoBluetoothErrorDialog(this).show(this.supportFragmentManager)
         }
     }
 
-    private fun openMainActivity(user: User) {
-        val intent = MainActivity.newIntent(this, user)
+    private fun openMainActivity(device: Device) {
+        val intent = MainActivity.newIntent(this, device)
         startActivity(intent)
     }
 
@@ -169,14 +168,14 @@ class LoginActivity : SimpleActivity() {
      * the default. Opens [MainActivity] regardless
      * @return The newly created [SaveUserNameDialog]
      */
-    private fun getSaveUserNameDialog(user: User): SaveUserNameDialog {
+    private fun getSaveUserNameDialog(device: Device): SaveUserNameDialog {
         return SaveUserNameDialog.newInstance(
-                user.userName,
+                device.name,
                 {
-                    saveUsernameToPrefs(user.userName)
-                    openMainActivity(user)
+                    saveUsernameToPrefs(device.name)
+                    openMainActivity(device)
                 },
-                { openMainActivity(user) }
+                { openMainActivity(device) }
         )
     }
 

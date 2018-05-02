@@ -135,8 +135,7 @@
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:gravity="center"
                 android:maxWidth="260dp"
-                android:text="@string/fragment_conversation_connect_help_text"
-                android:textSize="13sp" />
+                android:text="@string/fragment_conversation_connect_help_text" />
 
         </LinearLayout>
 

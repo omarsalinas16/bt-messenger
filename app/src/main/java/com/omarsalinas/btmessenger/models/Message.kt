@@ -12,7 +12,7 @@ import java.util.*
  * @param content The string message
  * @param author The creator of the message
  */
-data class Message(val content: String, @NonNull @NotNull val author: User) : Parcelable, Comparable<Message> {
+data class Message(val content: String, @NonNull @NotNull val author: Device) : Parcelable, Comparable<Message> {
 
     val timestamp: Date = Date()
 
@@ -39,7 +39,7 @@ data class Message(val content: String, @NonNull @NotNull val author: User) : Pa
 
     constructor(source: Parcel) : this(
             source.readString(),
-            source.readParcelable<User>(User::class.java.classLoader)
+            source.readParcelable<Device>(Device::class.java.classLoader)
     )
 
     override fun describeContents() = 0

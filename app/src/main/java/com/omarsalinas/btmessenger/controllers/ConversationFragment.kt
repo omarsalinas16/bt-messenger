@@ -16,7 +16,7 @@ import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.*
 import com.omarsalinas.btmessenger.controllers.adapters.ConversationAdapter
 import com.omarsalinas.btmessenger.models.Message
-import com.omarsalinas.btmessenger.models.User
+import com.omarsalinas.btmessenger.models.Device
 import kotlinx.android.synthetic.main.fragment_conversation.view.*
 import org.jetbrains.annotations.NotNull
 import java.util.*
@@ -28,9 +28,9 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
         private const val BUNDLE_USER = "com.omarsalinas.btmessenger.bundle_user"
         private const val BUNDLE_PAL = "com.omarsalinas.btmessenger.bundle_pal"
 
-        fun newInstance(@NonNull @NotNull user: User, @NonNull @NotNull pal: User): ConversationFragment {
+        fun newInstance(@NonNull @NotNull currentDevice: Device, @NonNull @NotNull pal: Device): ConversationFragment {
             val bundle = Bundle()
-            bundle.putParcelable(BUNDLE_USER, user)
+            bundle.putParcelable(BUNDLE_USER, currentDevice)
             bundle.putParcelable(BUNDLE_PAL, pal)
 
             val fragment = ConversationFragment()
@@ -42,8 +42,8 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
 
     private var messages: ArrayList<Message> = arrayListOf()
 
-    private lateinit var user: User
-    private lateinit var pal: User
+    private lateinit var currentdevice: Device
+    private lateinit var pal: Device
     private lateinit var adapter: ConversationAdapter
 
     private lateinit var recyclerView: RecyclerView
@@ -71,13 +71,13 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        this.user = arguments!!.getParcelable(BUNDLE_USER)
+        this.currentdevice = arguments!!.getParcelable(BUNDLE_USER)
         this.pal = arguments!!.getParcelable(BUNDLE_PAL)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.adapter = ConversationAdapter(this.user, { messages })
+        this.adapter = ConversationAdapter(this.currentdevice, { messages })
 
         setViewsById(view)
         setViewListeners()
@@ -235,7 +235,7 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
     }
 
     private fun createMessage(): Message {
-        return Message(AppUtils.getEditTextValue(this.messageEditText), this.user)
+        return Message(AppUtils.getEditTextValue(this.messageEditText), this.currentdevice)
     }
 
     private fun addMessage(message: Message) {
@@ -243,8 +243,8 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
         this.recyclerView.smoothScrollToPosition(this.adapter.itemCount - 1)
     }
 
-    private fun setPalInfo(pal: User) {
-        setPalInfo(pal.userName, pal.address)
+    private fun setPalInfo(pal: Device) {
+        setPalInfo(pal.name, pal.address)
     }
 
     private fun setPalInfo(userName: String, address: String) {

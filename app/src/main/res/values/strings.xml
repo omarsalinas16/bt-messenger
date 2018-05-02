@@ -4,6 +4,8 @@
     <!-- Common strings -->
     <string name="welcome">Welcome</string>
     <string name="enter">Enter</string>
+    <string name="unknown">Unknown</string>
+    <string name="paired">Paired</string>
 
     <!-- Error strings -->
     <string name="error_no_bluetooth">Not compatible</string>
@@ -25,7 +27,7 @@
 
     <!-- fragment-conversation -->
     <string name="fragment_conversation_connect_btn_text">Connect</string>
-    <string name="fragment_conversation_connect_help_text">While the other device listens for connection click on Connect (Only one device need to click connect)</string>
+    <string name="fragment_conversation_connect_help_text">While the other device listens for connection click on Connect (Only one device needs to click connect)</string>
 
     <!-- BtController -->
     <string name="bt_helper_connecting">Connecting to device…</string>

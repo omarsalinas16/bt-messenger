@@ -11,10 +11,6 @@ import android.widget.Toast
 
 abstract class SimpleFragment : Fragment() {
 
-    companion object {
-        private const val TAG: String = "SIMPLE_FRAGMENT"
-    }
-
     @LayoutRes
     protected abstract fun getLayoutId(): Int
 

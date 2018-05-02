@@ -9,14 +9,14 @@ import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.SimpleAdapter
 import com.omarsalinas.btmessenger.common.SimpleHolder
 import com.omarsalinas.btmessenger.models.Message
-import com.omarsalinas.btmessenger.models.User
+import com.omarsalinas.btmessenger.models.Device
 import kotlinx.android.synthetic.main.item_message.view.*
 import org.joda.time.DateTime
 import org.joda.time.Minutes
 import java.util.ArrayList
 
 class ConversationAdapter(
-        private val user: User,
+        private val currentDevice: Device,
         getter: () -> ArrayList<Message>
 ) : SimpleAdapter<Message, ConversationAdapter.ConversationHolder>(getter) {
 
@@ -25,7 +25,7 @@ class ConversationAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (user.address == list[position].author.address)
+        return if (currentDevice.address == list[position].author.address)
             R.layout.item_message
         else
             R.layout.item_message_incoming
@@ -66,7 +66,7 @@ class ConversationAdapter(
         private val timestampText: TextView = view.item_message_timestamp_txt
 
         override fun bind(item: Message) {
-            this.nameText.text = item.author.userName
+            this.nameText.text = item.author.name
             this.contentText.text = item.content
             this.timestampText.text = item.formattedDate
         }

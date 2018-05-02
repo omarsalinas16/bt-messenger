@@ -6,17 +6,17 @@ import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.FragmentActivity
-import com.omarsalinas.btmessenger.models.User
+import com.omarsalinas.btmessenger.models.Device
 import org.jetbrains.annotations.NotNull
 
 class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
 
     companion object {
-        private const val EXTRA_USER: String = "com.omarsalinas.btmessenger.extra_user"
+        private const val EXTRA_CURRENT_DEVICE: String = "com.omarsalinas.btmessenger.extra_current_device"
 
-        fun newIntent(context: Context?, @NonNull @NotNull user: User): Intent {
+        fun newIntent(context: Context?, @NonNull @NotNull currentDevice: Device): Intent {
             val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra(EXTRA_USER, user)
+            intent.putExtra(EXTRA_CURRENT_DEVICE, currentDevice)
 
             return intent
         }
@@ -28,17 +28,17 @@ class MainActivity : FragmentActivity(), DevicesFragment.Callbacks {
         return DevicesFragment.newInstance()
     }
 
-    override fun onDeviceSelected(pal: User) {
-        val user = intent.getParcelableExtra<User>(EXTRA_USER)
+    override fun onDeviceSelected(palDevice: Device) {
+        val currentDevice = intent.getParcelableExtra<Device>(EXTRA_CURRENT_DEVICE)
 
         if (getLayoutId() == R.layout.activity_double) {
-            val fragment = ConversationFragment.newInstance(user, pal)
+            val fragment = ConversationFragment.newInstance(currentDevice, palDevice)
 
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container_extra, fragment)
                     .commit()
         } else {
-            val intent = ConversationActivity.newIntent(this, user, pal)
+            val intent = ConversationActivity.newIntent(this, currentDevice, palDevice)
             startActivity(intent)
         }
     }

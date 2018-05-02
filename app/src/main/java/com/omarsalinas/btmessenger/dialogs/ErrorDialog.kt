@@ -8,7 +8,6 @@ import com.omarsalinas.btmessenger.common.SimpleDialog
 class ErrorDialog : SimpleDialog() {
 
     companion object {
-        private const val TAG: String = "PERMISSION_ERROR_DIALOG"
         private const val BUNDLE_ERROR_DIALOG_TITLE: String = "com.omarsalinas.btmessenger.bundle_error_dialog_title"
         private const val BUNDLE_ERROR_DIALOG_MESSAGE: String = "com.omarsalinas.btmessenger.bundle_error_dialog_message"
 
