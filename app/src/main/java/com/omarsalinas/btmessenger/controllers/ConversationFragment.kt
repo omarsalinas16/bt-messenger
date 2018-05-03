@@ -2,12 +2,14 @@ package com.omarsalinas.btmessenger.controllers
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.NonNull
 import android.support.annotation.StringRes
 import android.support.v7.widget.*
 import android.text.Editable
 import android.text.TextWatcher
+import android.transition.TransitionManager
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -24,7 +26,6 @@ import java.util.*
 class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
 
     companion object {
-        private const val TAG: String = "CONVERSATION_FRAGMENT"
         private const val BUNDLE_USER = "com.omarsalinas.btmessenger.bundle_user"
         private const val BUNDLE_PAL = "com.omarsalinas.btmessenger.bundle_pal"
 
@@ -162,6 +163,8 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
                 this.showErrorMessage = false
             }
             BtHelperState.CONNECTING -> {
+                AppUtils.startTransition(this.loadingContainer)
+
                 setLoadingContainerVisibility(true)
                 setConnectContainerVisibility(false)
 
@@ -171,6 +174,8 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
                 AppUtils.setVisibility(this.loading, true)
             }
             BtHelperState.CONNECTED -> {
+                AppUtils.startTransition(this.loadingContainer)
+
                 setLoadingContainerVisibility(false)
                 setConnectContainerVisibility(false)
 
@@ -180,6 +185,8 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
                 AppUtils.setVisibility(this.loading, false)
             }
             BtHelperState.CONNECTION_LOST -> {
+                AppUtils.startTransition(this.loadingContainer)
+
                 setLoadingContainerVisibility(true)
                 setConnectContainerVisibility(true)
 
@@ -187,6 +194,8 @@ class ConversationFragment : SimpleFragment(), BtHandler.Callbacks {
                 AppUtils.setVisibility(this.loading, false)
             }
             BtHelperState.NO_CONNECTION -> {
+                AppUtils.startTransition(this.loadingContainer)
+
                 setLoadingContainerVisibility(true)
                 setConnectContainerVisibility(true)
 

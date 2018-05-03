@@ -4,14 +4,13 @@ import android.support.v7.widget.AppCompatTextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.omarsalinas.btmessenger.R
 import com.omarsalinas.btmessenger.common.AppUtils
 import com.omarsalinas.btmessenger.common.SimpleAdapter
 import com.omarsalinas.btmessenger.common.SimpleHolder
 import com.omarsalinas.btmessenger.models.Device
 import kotlinx.android.synthetic.main.item_device.view.*
-import java.util.ArrayList
+import java.util.*
 
 class DevicesAdapter(
         private val callbacks: Callbacks,
